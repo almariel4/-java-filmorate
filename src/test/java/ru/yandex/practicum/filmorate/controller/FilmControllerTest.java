@@ -77,11 +77,11 @@ public class FilmControllerTest {
 
     @Test
     void createFilm_RealiseDateBeforeFirstFilmDate_badRequestTest() throws Exception {
-        testFilm.setReleaseDate(LocalDate.of(1985, 12,12));
+        testFilm.setReleaseDate(LocalDate.of(1885, 12,12));
         mockMvc.perform(post("/films")
                         .content(objectMapper.writeValueAsString(testFilm))
                         .contentType("application/json"))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
 }

@@ -18,8 +18,8 @@ import java.util.List;
 @RequestMapping(value = "/films", produces = "application/json")
 public class FilmController {
 
-    private int idForFilm = 0;
     private final HashMap<Integer, Film> films = new HashMap<>();
+    private int idForFilm = 0;
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
@@ -38,7 +38,7 @@ public class FilmController {
                 films.put(film.getId(), film);
                 log.info("Поступил запрос на изменения фильма. Фильм изменён.");
             } else {
-                log.debug("Поступил запрос на изменения фильма. Фильм не найден.");
+                log.error("Поступил запрос на изменения фильма. Фильм не найден.");
                 throw new FilmException("Film not found.");
             }
         return film;
@@ -51,8 +51,7 @@ public class FilmController {
 
 
     private int getIdForFilm() {
-        idForFilm++;
-        return idForFilm;
+        return ++idForFilm;
     }
 
     private void filmValidation(Film film) throws ValidationException {

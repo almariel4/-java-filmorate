@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping(value = "/users", produces = "application/json")
 public class UserController {
 
-    private int idForUser = 0;
     private final HashMap<Integer, User> users = new HashMap<>();
+    private int idForUser = 0;
 
 
     @PostMapping
@@ -37,7 +37,7 @@ public class UserController {
             users.put(user.getId(), user);
             log.info("Поступил запрос на изменения пользователя. Пользователь изменён.");
         } else {
-            log.debug("Поступил запрос на изменения пользователя. Пользователь не найден.");
+            log.error("Поступил запрос на изменения пользователя. Пользователь не найден.");
             throw new UserException("User not found.");
         }
         return user;
@@ -50,8 +50,7 @@ public class UserController {
 
 
     private int getIdForUser() {
-        idForUser++;
-        return idForUser;
+        return ++idForUser;
     }
 
     private void userValidation(User user) throws ValidationException {
