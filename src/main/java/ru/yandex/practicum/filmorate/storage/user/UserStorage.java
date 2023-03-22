@@ -22,10 +22,31 @@ public interface UserStorage {
     User updateUser(User user);
 
     /**
+     * Метод добавления в друзья
+     */
+    User addFriend(Integer userId, Integer friendId);
+
+    /**
+     * Метод удаления из друзей
+     */
+    User deleteFriend(Integer userId, Integer friendId);
+
+
+    /**
+     * Метод для обновления пользователя
+     */
+
+    List<User> getMutualFriends(Integer id, Integer otherId);
+
+    /**
      * Метод для получения пользователя по id
      */
 
-    User getUserById(int id);
+    User getUserById(Integer id);
 
+    /**
+     * Метод для получения списка друзей
+     */
+    List<User> getFriendsByUserId(Integer id);
 
 }
