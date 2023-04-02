@@ -11,13 +11,13 @@ FROM (SELECT login<br/>
 FROM users<br/>
 WHERE user_id IN (SELECT friend_id<br/>
 FROM friends<br/>
-WHERE user_id=(long value)<br/> 
-AND status=true))<br/>
+WHERE user_id = (int value)<br/> 
+AND status = true))<br/>
 WHERE login IN (SELECT login<br/>
 FROM user<br/>
 WHERE user_id IN (SELECT friend_id<br/>
 FROM friends<br/>
-WHERE user_id = (long value)<br/>
+WHERE user_id = (int value)<br/>
 AND status = true));
 
 ##### _Запрос на получение списка всех фильмов:_
