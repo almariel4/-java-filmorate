@@ -22,7 +22,7 @@ AND status = true));
 
 ##### _Запрос на получение списка всех фильмов:_
 SELECT *<br/>
-FROM film;
+FROM films;
 ##### _Запрос на получение топ 10 популярных фильмов:_
 SELECT *<br/>
 FROM film<br/>
