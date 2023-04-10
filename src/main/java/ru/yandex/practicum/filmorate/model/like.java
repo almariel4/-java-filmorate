@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class like {
+public class Like {
 
     @NotNull
     private Integer id;
