@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -53,6 +54,29 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(id)) {
             return films.get(id);
         } else throw new NotFoundException("Film not found.");
+    }
+
+    @Override
+    public Film putALike(int filmId, int userId) {
+        getFilmById(filmId).getLikes().add(userId);
+        return getFilmById(filmId);
+    }
+
+    @Override
+    public Film deleteLike(int filmId, int userId) {
+        if (getFilmById(filmId).getLikes().contains(userId)) {
+            getFilmById(filmId).getLikes().remove(userId);
+        } else {
+            throw new NotFoundException("Пользователь не ставил оценку данному фильму.");
+        }
+        return getFilmById(filmId);
+    }
+
+    @Override
+    public List<Film> getRating(int count) {
+        return findAllFilms().stream().sorted((film1, film2) ->
+                        film2.getLikes().size() - film1.getLikes().size())
+                .limit(count).collect(Collectors.toList());
     }
 
     private int getIdForFilm() {
