@@ -95,7 +95,6 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film putALike(int filmId, int userId) {
         Film film = getFilmById(filmId);
-        userStorage.getUserById(userId);
         String sqlQuery = "INSERT INTO likes (film_id, user_id) VALUES(?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
         return film;
@@ -105,11 +104,11 @@ public class FilmDbStorage implements FilmStorage {
     public Film deleteLike(int filmId, int userId) {
         Film film = getFilmById(filmId);
         if (userStorage.getUserById(userId) == null) {
-            throw new NotFoundException("Пользователь не ставил лайк этому фильму.");
+            throw new NotFoundException("Пользователь не найден.");
         }
         String sqlQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
         if (likeDbStorage.getLikesForCurrentFilm(filmId).isEmpty()) {
-            throw new NotFoundException("No likes were found from this user");
+            throw new NotFoundException("Пользователь не ставил лайк этому фильму.");
         }
         jdbcTemplate.update(sqlQuery, filmId, userId);
         return film;

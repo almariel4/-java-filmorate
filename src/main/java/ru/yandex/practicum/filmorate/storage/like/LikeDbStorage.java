@@ -15,7 +15,7 @@ public class LikeDbStorage {
     private final JdbcTemplate jdbcTemplate;
 
 
-    public Set<Integer> getLikesForCurrentFilm(int id) {
+    public Set<Integer> getLikesForCurrentFilm(Integer id) {
         Set<Integer> likes = new HashSet<>();
         SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT like_id, film_id, user_id FROM likes");
         while (likeRows.next()) {

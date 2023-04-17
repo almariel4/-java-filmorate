@@ -3,9 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -15,15 +13,21 @@ import java.util.Set;
 public class User {
 
     private Integer id;
-    @Email
-    @NotBlank
+
+    @NotEmpty
+    @Email(message = "Некорректный email.")
     private String email;
-    @NotBlank
+
+    @NotBlank(message = "Логин не может быть пустым.")
+    @Pattern(regexp = "\\S*", message = "Логин содержит пробелы.")
     private String login;
+
     private String name;
-    @Past
-    @NotBlank
+
+    @NotNull
+    @PastOrPresent(message = "Некорректна указана дата рождения.")
     private LocalDate birthday;
+
     private Set<Integer> friends;
 
 
