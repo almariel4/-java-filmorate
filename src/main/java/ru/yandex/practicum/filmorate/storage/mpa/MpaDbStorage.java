@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -41,21 +42,19 @@ private final JdbcTemplate jdbcTemplate;
         }
     }
 
-    public Film addMpaToFilm(Film film){
+    public void addMpaToFilm(Film film){
         findAll().forEach(mpa -> {
-            if(film.getMpa().getId()==mpa.getId()){
+            if(Objects.equals(film.getMpa().getId(), mpa.getId())){
                 film.setMpa(mpa);
             }
         });
-        return film;
     }
 
     private Mpa mapRowToMpa(ResultSet resultSet, int rowNum) throws SQLException {
-        Mpa mpa = Mpa.builder()
+        return Mpa.builder()
                 .id(resultSet.getInt("rating_mpa_id"))
                 .name(resultSet.getString("name"))
                 .build();
-        return mpa;
     }
 
 }

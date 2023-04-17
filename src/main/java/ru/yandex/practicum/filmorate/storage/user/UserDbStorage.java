@@ -12,10 +12,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Primary
@@ -39,7 +36,7 @@ public class UserDbStorage implements UserStorage {
                     .name(rowSet.getString("name"))
                     .login(rowSet.getString("login"))
                     .email(rowSet.getString("email"))
-                    .birthday(rowSet.getDate("birthday").toLocalDate())
+                    .birthday(Objects.requireNonNull(rowSet.getDate("birthday")).toLocalDate())
                     .build();
             users.add(user);
         }
@@ -95,12 +92,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getMutualFriends(Integer id, Integer otherId) {
-        List<User> mutualFriends = new ArrayList<>();
         String sqlQuery = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id IN(" +
                 "SELECT friend_id FROM friends WHERE user_id = ?) " +
                 "AND user_id IN(SELECT friend_id FROM friends WHERE user_id = ?)";
-        mutualFriends.addAll(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id, otherId));
-        return mutualFriends;
+        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id, otherId));
     }
 
     @Override
@@ -117,9 +112,7 @@ public class UserDbStorage implements UserStorage {
     public List<User> getFriendsByUserId(Integer id) {
         String sqlQuery = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id IN" +
                 "(SELECT friend_id FROM friends WHERE user_id=?)";
-        List<User> friendList = new ArrayList<>();
-        friendList.addAll(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
-        return friendList;
+        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
     }
 
     private Map<String, Object> toMap(User user) {

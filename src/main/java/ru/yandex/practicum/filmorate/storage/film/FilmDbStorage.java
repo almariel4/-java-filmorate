@@ -16,10 +16,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Primary
 @Slf4j
@@ -41,7 +38,7 @@ public class FilmDbStorage implements FilmStorage {
                     .id(filmRows.getInt("film_id"))
                     .name(filmRows.getString("name"))
                     .description(filmRows.getString("description"))
-                    .releaseDate(filmRows.getDate("release_date").toLocalDate())
+                    .releaseDate(Objects.requireNonNull(filmRows.getDate("release_date")).toLocalDate())
                     .duration(filmRows.getInt("duration"))
                     .mpa(mpaDbStorage.getMpa(filmRows.getInt("rating_mpa_id")))
                     .build();
@@ -107,9 +104,6 @@ public class FilmDbStorage implements FilmStorage {
             throw new NotFoundException("Пользователь не найден.");
         }
         String sqlQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
-        if (likeDbStorage.getLikesForCurrentFilm(filmId).isEmpty()) {
-            throw new NotFoundException("Пользователь не ставил лайк этому фильму.");
-        }
         jdbcTemplate.update(sqlQuery, filmId, userId);
         return film;
     }
@@ -121,8 +115,7 @@ public class FilmDbStorage implements FilmStorage {
                 "GROUP BY films.film_id\n" +
                 "ORDER BY count DESC\n" +
                 "LIMIT ?";
-        List<Film> filmList = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
-        return filmList;
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
