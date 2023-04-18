@@ -90,9 +90,7 @@ class FilmDbStorageTest {
         assertEquals(1, filmDbStorage.findAllFilms().size());
     }
 
-    /**
-     * Тест на постановку лайка и получение рейтинга фильмов
-     */
+
     @Test
     void shouldPutALikeAndGetRating() {
         filmDbStorage.addFilm(film);

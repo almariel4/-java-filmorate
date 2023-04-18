@@ -79,9 +79,7 @@ class UserDbStorageTest {
         assertEquals(0, userDbStorage.getFriendsByUserId(friend.getId()).size());
     }
 
-    /**
-     * Тест на получение списка общих друзей двух пользователей
-     */
+
     @Test
     void shouldGetMutualFriends() {
         userDbStorage.addUser(user);
