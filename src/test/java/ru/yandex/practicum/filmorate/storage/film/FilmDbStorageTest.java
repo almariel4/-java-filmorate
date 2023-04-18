@@ -97,13 +97,13 @@ class FilmDbStorageTest {
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
         filmDbStorage.putALike(1, 1);
-        assertEquals(1, likeDbStorage.getLikesForCurrentFilm(1).size());
+        assertTrue(likeDbStorage.getLikesForCurrentFilm(1).size() == 1);
 
         filmDbStorage.addFilm(film2);
         filmDbStorage.putALike(2, 1);
         filmDbStorage.putALike(2, 2);
-        assertEquals(2L, filmDbStorage.getRating(2).get(0).getId());
-        assertEquals(2, filmDbStorage.getRating(2).size());
+        assertTrue(filmDbStorage.getRating(2).get(0).getId() == 2);
+        assertTrue(filmDbStorage.getRating(2).size() == 2);
 
         filmDbStorage.deleteLike(1, 1);
         assertTrue(likeDbStorage.getLikesForCurrentFilm(1).isEmpty());
