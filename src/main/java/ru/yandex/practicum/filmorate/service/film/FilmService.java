@@ -18,7 +18,7 @@ public class FilmService {
 
 
     public Film like(int filmId, int userId) {
-        return filmStorage.putALike(filmId, userId);
+        return filmStorage.like(filmId, userId);
     }
 
     public Film deleteLike(int filmId, int userId) {

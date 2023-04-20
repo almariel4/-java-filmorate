@@ -25,7 +25,7 @@ class UserDbStorageTest {
     User mutualFriend;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         jdbcTemplate.update("DELETE FROM users");
         jdbcTemplate.update("DELETE FROM friends");
         user = User.builder()

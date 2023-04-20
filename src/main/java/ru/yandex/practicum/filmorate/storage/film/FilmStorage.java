@@ -28,7 +28,7 @@ public interface FilmStorage {
     /**
      * Метод для присвоения лайка фильму
      */
-    Film putALike(int filmId, int userId);
+    Film like(int filmId, int userId);
 
     /**
      * Метод для удаления лайка с фильма
