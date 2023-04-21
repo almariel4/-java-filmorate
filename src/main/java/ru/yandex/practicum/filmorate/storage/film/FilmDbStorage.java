@@ -59,6 +59,7 @@ public class FilmDbStorage implements FilmStorage {
         mpaDbStorage.addMpaToFilm(film);
         genreDbStorage.addGenreNameToFilm(film);
         genreDbStorage.addGenresForCurrentFilm(film);
+        log.info("Поступил запрос на добавление фильма. Фильм добавлен.");
         return film;
     }
 

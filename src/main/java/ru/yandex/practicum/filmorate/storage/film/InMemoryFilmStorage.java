@@ -27,7 +27,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
-        filmValidation(film);
+        validationFilm(film);
         film.setLikes(new HashSet<>());
         film.setId(getIdForFilm());
         films.put(film.getId(), film);
@@ -38,7 +38,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (films.get(film.getId()) != null) {
-            filmValidation(film);
+            validationFilm(film);
             film.setLikes(new HashSet<>());
             films.put(film.getId(), film);
             log.info("Поступил запрос на изменения фильма. Фильм изменён.");
@@ -83,7 +83,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return ++idForFilm;
     }
 
-    private void filmValidation(Film film) throws ValidationException {
+    private void validationFilm(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))
                 || film.getReleaseDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Некорректно указана дата релиза.");

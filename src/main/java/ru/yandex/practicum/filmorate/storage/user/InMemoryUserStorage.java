@@ -26,7 +26,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        userValidation(user);
+        validationUser(user);
         user.setFriends(new HashSet<>());
         user.setId(getIdForUser());
         users.put(user.getId(), user);
@@ -37,7 +37,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         if (users.get(user.getId()) != null) {
-            userValidation(user);
+            validationUser(user);
             user.setFriends(new HashSet<>());
             users.put(user.getId(), user);
             log.info("Поступил запрос на изменения пользователя. Пользователь изменён.");
@@ -78,7 +78,7 @@ public class InMemoryUserStorage implements UserStorage {
         return ++idForUser;
     }
 
-    private void userValidation(User user) throws ValidationException {
+    private void validationUser(User user) throws ValidationException {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
