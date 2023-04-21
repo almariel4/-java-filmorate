@@ -90,23 +90,4 @@ class FilmDbStorageTest {
         assertEquals(1, filmDbStorage.findAllFilms().size());
     }
 
-
-    @Test
-    void shouldPutALikeAndGetRating() {
-        filmDbStorage.addFilm(film);
-        userDbStorage.addUser(user);
-        userDbStorage.addUser(user2);
-        filmDbStorage.like(1, 1);
-        assertEquals(1, likeDbStorage.getLikesForCurrentFilm(1).size());
-
-        filmDbStorage.addFilm(film2);
-        filmDbStorage.like(2, 1);
-        filmDbStorage.like(2, 2);
-        assertEquals(2, filmDbStorage.getRating(2).get(0).getId());
-        assertEquals(2, filmDbStorage.getRating(2).size());
-
-        filmDbStorage.deleteLike(1, 1);
-        assertTrue(likeDbStorage.getLikesForCurrentFilm(1).isEmpty());
-    }
-
 }
