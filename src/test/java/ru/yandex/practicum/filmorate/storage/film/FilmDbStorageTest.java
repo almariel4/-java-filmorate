@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.storage.like.LikeDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
@@ -21,11 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class FilmDbStorageTest {
     private final FilmDbStorage filmDbStorage;
+    private final FilmService filmService;
     private final UserDbStorage userDbStorage;
     private final LikeDbStorage likeDbStorage;
-    private final JdbcTemplate jdbcTemplate;
     Film film;
     Film film2;
     User user;
@@ -34,8 +36,6 @@ class FilmDbStorageTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("DELETE FROM likes");
-        jdbcTemplate.update("DELETE FROM films");
         film = Film.builder()
                 .name("name")
                 .description("desc")
@@ -89,5 +89,31 @@ class FilmDbStorageTest {
 
         assertEquals(1, filmDbStorage.findAllFilms().size());
     }
+
+    @Test
+    void likeAndDeleteLikeTest() {
+        filmDbStorage.addFilm(film);
+        userDbStorage.addUser(user);
+        userDbStorage.addUser(user2);
+        filmDbStorage.like(1, 1);
+        filmDbStorage.like(1, 2);
+        film.setLikes(likeDbStorage.getLikesForCurrentFilm(film.getId()));
+        assertEquals(2, film.getLikes().size());
+
+        filmDbStorage.deleteLike(1, 1);
+        film.setLikes(likeDbStorage.getLikesForCurrentFilm(film.getId()));
+        assertEquals(1, film.getLikes().size());
+    }
+
+    @Test
+    void getRatingTest() {
+        filmDbStorage.addFilm(film);
+        userDbStorage.addUser(user);
+        userDbStorage.addUser(user2);
+        filmDbStorage.like(1, 1);
+        filmDbStorage.like(1, 2);
+        assertEquals(1, filmService.getTopFilms(1).get(0).getId());
+    }
+
 
 }

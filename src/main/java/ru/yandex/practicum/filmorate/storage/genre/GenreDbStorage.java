@@ -44,9 +44,9 @@ public class GenreDbStorage {
         return genreSet;
     }
 
-    public Film addGenresForCurrentFilm(Film film) {
+    public void addGenresForCurrentFilm(Film film) {
         if (Objects.isNull(film.getGenres())) {
-            return film;
+            return;
         }
         film.getGenres().forEach(g -> {
             String sqlQuery = "INSERT INTO genre(film_id, genre_id) VALUES (?, ?)";
@@ -54,14 +54,12 @@ public class GenreDbStorage {
                     film.getId(),
                     g.getId());
         });
-        return film;
     }
 
-    public Film updateGenresForCurrentFilm(Film film) {
+    public void updateGenresForCurrentFilm(Film film) {
         String sqlQuery = "DELETE FROM genre WHERE film_id = ?";
         jdbcTemplate.update(sqlQuery, film.getId());
         addGenresForCurrentFilm(film);
-        return film;
     }
 
     public Genre getGenreForId(int id) {
@@ -74,12 +72,11 @@ public class GenreDbStorage {
 
     }
 
-    public Film addGenreNameToFilm(Film film) {
+    public void addGenreNameToFilm(Film film) {
         if (Objects.isNull(film.getGenres())) {
-            return film;
+            return;
         }
         film.getGenres().forEach(g -> g.setName(getGenreForId(g.getId()).getName()));
-        return film;
     }
 
 
