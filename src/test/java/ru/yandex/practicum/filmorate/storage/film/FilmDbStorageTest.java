@@ -89,13 +89,14 @@ class FilmDbStorageTest {
 
         assertEquals(1, filmDbStorage.findAllFilms().size());
     }
-    
+
+
     @Test
-    void likeAndDeleteLikeTest(){
+    void likeAndDeleteLikeTest() {
         filmDbStorage.addFilm(film);
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
-        
+
         filmDbStorage.like(1,1);
         filmDbStorage.like(1,2);
         film.setLikes(likeDbStorage.getLikesForCurrentFilm(film.getId()));
