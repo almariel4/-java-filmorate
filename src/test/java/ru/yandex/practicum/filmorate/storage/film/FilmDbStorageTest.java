@@ -78,7 +78,7 @@ class FilmDbStorageTest {
     }
 
     @Test
-    void CreateFilmTest() {
+    void addFilmTest() {
         filmDbStorage.addFilm(film);
         assertEquals(film, filmDbStorage.getFilmById(film.getId()));
     }
