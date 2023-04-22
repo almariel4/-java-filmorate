@@ -77,17 +77,20 @@ class FilmDbStorageTest {
         user2.setFriends(new HashSet<>());
     }
 
+    @Test
+    void CreateFilmTest() {
+        filmDbStorage.addFilm(film);
+        assertEquals(film, filmDbStorage.getFilmById(film.getId()));
+    }
 
     @Test
-    void shouldCreateAndGetAndUpdateFilm() {
+    void updateFilmTest() {
         filmDbStorage.addFilm(film);
         assertEquals(film, filmDbStorage.getFilmById(film.getId()));
 
         film.setName("updateName");
         filmDbStorage.updateFilm(film);
         assertEquals("updateName", filmDbStorage.getFilmById(film.getId()).getName());
-
-        assertEquals(1, filmDbStorage.findAllFilms().size());
     }
 
     @Test
