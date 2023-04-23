@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.genre.GenreDbStorage;
-import ru.yandex.practicum.filmorate.storage.like.LikeDbStorage;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -26,13 +26,14 @@ public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final UserStorage userStorage;
     private final MpaDbStorage mpaDbStorage;
-    private final LikeDbStorage likeDbStorage;
+    private final LikeStorage likeDbStorage;
     private final GenreDbStorage genreDbStorage;
 
     @Override
     public List<Film> findAllFilms() {
         List<Film> films = new ArrayList<>();
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film_id, name, description, release_date, duration, rating_mpa_id FROM films");
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film_id, name, description, release_date," +
+                " duration, rating_mpa_id FROM films");
         while (filmRows.next()) {
             Film film = Film.builder()
                     .id(filmRows.getInt("film_id"))

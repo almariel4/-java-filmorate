@@ -14,7 +14,7 @@ import java.util.*;
 
 @Component
 @RequiredArgsConstructor
-public class GenreDbStorage {
+public class GenreDbStorage implements GenreStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -33,7 +33,7 @@ public class GenreDbStorage {
     }
 
     public Set<Genre> getGenreForCurrentFilm(int id) {
-        Set<Genre> genreSet = new HashSet<>();
+        Set<Genre> genreSet = new LinkedHashSet<>();
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT id, film_id, genre_id FROM genre " +
                 "ORDER BY genre_id ASC");
         while (genreRows.next()) {

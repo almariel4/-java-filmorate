@@ -10,12 +10,12 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class LikeDbStorage {
+public class LikeDbStorage implements LikeStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public Set<Integer> getLikesForCurrentFilm(Integer id) {
+    public Set<Integer> getLikesForCurrentFilm(int id) {
         Set<Integer> likes = new HashSet<>();
         SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT like_id, film_id, user_id FROM likes");
         while (likeRows.next()) {
