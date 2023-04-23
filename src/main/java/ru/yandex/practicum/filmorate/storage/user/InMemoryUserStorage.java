@@ -26,7 +26,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        userValidation(user);
+        validationUser(user);
         user.setFriends(new HashSet<>());
         user.setId(getIdForUser());
         users.put(user.getId(), user);
@@ -37,7 +37,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         if (users.get(user.getId()) != null) {
-            userValidation(user);
+            validationUser(user);
             user.setFriends(new HashSet<>());
             users.put(user.getId(), user);
             log.info("Поступил запрос на изменения пользователя. Пользователь изменён.");
@@ -63,9 +63,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getMutualFriends(Integer userId, Integer friendId){
+    public List<User> getMutualFriends(Integer userId, Integer friendId) {
         List<User> mutualFriends = new ArrayList<>();
-        for (Integer id :getUserById(userId).getFriends()) {
+        for (Integer id : getUserById(userId).getFriends()) {
             if (getUserById(friendId).getFriends().contains(id)) {
                 mutualFriends.add(getUserById(id));
             }
@@ -78,7 +78,7 @@ public class InMemoryUserStorage implements UserStorage {
         return ++idForUser;
     }
 
-    private void userValidation(User user) throws ValidationException {
+    private void validationUser(User user) throws ValidationException {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
