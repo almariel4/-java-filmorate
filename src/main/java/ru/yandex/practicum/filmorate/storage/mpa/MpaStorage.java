@@ -15,7 +15,7 @@ public interface MpaStorage {
     /**
      * Метод для получения рейтинга mpa по его id
      */
-    Mpa getMpa(int mpaId);
+    Mpa getMpaById(int mpaId);
 
     /**
      * Метод для присвоения рейтинга фильму

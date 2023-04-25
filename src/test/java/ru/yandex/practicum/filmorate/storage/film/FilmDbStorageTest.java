@@ -11,8 +11,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.storage.like.LikeDbStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.film.dao.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.like.dao.LikeDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.dao.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;

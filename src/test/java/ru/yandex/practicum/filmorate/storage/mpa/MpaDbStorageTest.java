@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.mpa.dao.MpaDbStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public class MpaDbStorageTest {
 
     @Test
     void getMpaForIdTest() {
-        Mpa mpaTest = mpaDbStorage.getMpa(5);
+        Mpa mpaTest = mpaDbStorage.getMpaById(5);
         assertEquals("NC-17", mpaTest.getName());
     }
 

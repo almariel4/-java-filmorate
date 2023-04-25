@@ -1,9 +1,10 @@
-package ru.yandex.practicum.filmorate.storage.like;
+package ru.yandex.practicum.filmorate.storage.like.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.util.HashSet;
 import java.util.Set;

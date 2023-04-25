@@ -36,7 +36,7 @@ public interface UserStorage {
      * Метод для обновления пользователя
      */
 
-    List<User> getMutualFriends(Integer id, Integer otherId);
+    List<User> getCommonsFriends(Integer id, Integer otherId);
 
     /**
      * Метод для получения пользователя по id

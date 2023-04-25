@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 
@@ -23,9 +22,8 @@ public class FilmControllerTest {
 
     @BeforeEach
     protected void init() {
-        filmStorage = new InMemoryFilmStorage();
         filmService = new FilmService(filmStorage);
-        controller = new FilmController(filmStorage, filmService);
+        controller = new FilmController(filmService);
         testFilm = Film.builder()
                 .name("Тестовый фильм")
                 .description("Тестовое описание тестового фильма")

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.storage.user.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -91,7 +92,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getMutualFriends(Integer id, Integer otherId) {
+    public List<User> getCommonsFriends(Integer id, Integer otherId) {
         String sqlQuery = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id IN(" +
                 "SELECT friend_id FROM friends WHERE user_id = ?) " +
                 "AND user_id IN(SELECT friend_id FROM friends WHERE user_id = ?)";

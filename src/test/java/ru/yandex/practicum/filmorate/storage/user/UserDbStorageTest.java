@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.dao.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -89,7 +90,7 @@ class UserDbStorageTest {
         userDbStorage.addUser(mutualFriend);
         userDbStorage.addFriend(user.getId(), mutualFriend.getId());
         userDbStorage.addFriend(friend.getId(), mutualFriend.getId());
-        assertSame(userDbStorage.getMutualFriends(user.getId(), friend.getId()).get(0).getId(), mutualFriend.getId());
+        assertSame(userDbStorage.getCommonsFriends(user.getId(), friend.getId()).get(0).getId(), mutualFriend.getId());
     }
 
 }

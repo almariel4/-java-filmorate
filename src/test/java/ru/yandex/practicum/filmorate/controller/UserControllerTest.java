@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
@@ -20,9 +19,9 @@ class UserControllerTest {
 
     @BeforeEach
     protected void init() {
-        userStorage = new InMemoryUserStorage();
+//        userStorage = new InMemoryUserStorage();
         userService = new UserService(userStorage);
-        controller = new UserController(userStorage, userService);
+        controller = new UserController(userService);
 
         testUser = User.builder()
                 .name("John")
