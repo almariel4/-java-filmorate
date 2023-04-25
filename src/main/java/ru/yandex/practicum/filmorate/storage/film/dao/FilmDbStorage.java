@@ -159,19 +159,26 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
-        String sqlQuery =
-                "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
-                        "FROM films " +
-                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
-                        "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
-                        "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID " +
-                        "WHERE g.id = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ?" +
-                        "GROUP BY films.film_id, gt.NAME " +
-                        "ORDER BY count DESC" +
-                        "LIMIT ?";
+        String sql = "WHERE G.GENRE_ID = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            String sqlQuery =
+                    "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
+                            "FROM films " +
+                            "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                            "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
+                            "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID " +
+                            sql +
+                            "GROUP BY films.film_id, gt.NAME " +
+                            "ORDER BY count DESC " +
+                            "LIMIT ?";
 
-        if (genre == -1 || year == -1) {
-            throw new ValidationException("Неверный запрос. Поля жанра и года обязательны к заполнению");
+        if (year == -1 && genre == -1) {
+            return getRating(count);
+        } else if (genre == -1 && year  > 0) {
+            sql = "WHERE EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, year, count);
+        } else if (genre > 0 && year == -1) {
+            sql = "WHERE G.GENRE_ID = ? ";
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, count);
         } else {
             return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, year, count);
         }
