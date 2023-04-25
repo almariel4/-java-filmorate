@@ -6,19 +6,9 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.List;
 
 public interface MpaStorage {
-
-    /**
-     * Метод для получения списка рейтингов mpa
-     */
-    List<Mpa> findAll();
-
-    /**
-     * Метод для получения рейтинга mpa по его id
-     */
     Mpa getMpaById(int mpaId);
 
-    /**
-     * Метод для присвоения рейтинга фильму
-     */
+    List<Mpa> findAll();
+
     void addMpaToFilm(Film film);
 }

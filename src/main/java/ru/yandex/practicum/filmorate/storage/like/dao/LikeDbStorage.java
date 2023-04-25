@@ -12,13 +12,14 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class LikeDbStorage implements LikeStorage {
-
     private final JdbcTemplate jdbcTemplate;
-
 
     public Set<Integer> getLikesForCurrentFilm(int id) {
         Set<Integer> likes = new HashSet<>();
-        SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT like_id, film_id, user_id FROM likes");
+        SqlRowSet likeRows = jdbcTemplate.queryForRowSet(
+                "SELECT like_id, film_id, user_id " +
+                        "FROM likes");
+
         while (likeRows.next()) {
             if (likeRows.getInt("film_id") == id) {
                 likes.add(likeRows.getInt("like_id"));

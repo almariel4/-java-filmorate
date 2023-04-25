@@ -19,7 +19,6 @@ class UserControllerTest {
 
     @BeforeEach
     protected void init() {
-//        userStorage = new InMemoryUserStorage();
         userService = new UserService(userStorage);
         controller = new UserController(userService);
 
@@ -35,7 +34,7 @@ class UserControllerTest {
     @Test
     public void createUser_NameIsBlank_NameIsLoginTest() {
         testUser.setName("");
-        controller.create(testUser);
+        controller.addUser(testUser);
         assertEquals("login", controller.getUsers().get(0).getName());
     }
 
@@ -43,7 +42,7 @@ class UserControllerTest {
     void createUser_BirthdayInFuture_badRequestTest()  {
         testUser.setBirthday(LocalDate.parse("2024-10-12"));
         try{
-            controller.create(testUser);
+            controller.addUser(testUser);
         } catch (ValidationException e){
             assertEquals("Неверно указана дата рождения", e.getMessage());
         }

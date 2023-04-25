@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) {
+    public User addUser(@Valid @RequestBody User user) {
         log.info("Поступил запрос на создание пользователя.");
         return userService.addUser(user);
     }
 
     @PutMapping
-    public User changeUser(@Valid @RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) {
         log.info("Поступил запрос на обновление пользователя.");
         return userService.updateUser(user);
     }
