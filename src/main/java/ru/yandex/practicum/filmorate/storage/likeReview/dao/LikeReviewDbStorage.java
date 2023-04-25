@@ -13,14 +13,14 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
 
     @Override
     public void createLike(int id, int userId) {
-        String sqlQuery = "INSERT INTO LIKE_REVIEW (review_id, user_id, is_positive) " +
+        String sqlQuery = "INSERT INTO like_review (review_id, user_id, is_positive) " +
                 "VALUES (?, ?, TRUE)";
         jdbcTemplate.update(sqlQuery, id, userId);
     }
 
     @Override
     public void createDislike(int id, int userId) {
-        String sqlQuery = "INSERT INTO LIKE_REVIEW (review_id, user_id, is_positive) " +
+        String sqlQuery = "INSERT INTO like_review (review_id, user_id, is_positive) " +
                 "VALUES (?, ?, FALSE)";
         jdbcTemplate.update(sqlQuery, id, userId);
     }
