@@ -41,6 +41,9 @@ public class FilmService {
 
     public List<Film> getTopFilms(int count) {
         return filmStorage.getRating(count);
+    }
 
+    public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
+        return filmStorage.getBestFilmsOfGenreAndYear(count, genre, year);
     }
 }

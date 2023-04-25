@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.dao.GenreDbStorage;
@@ -154,6 +155,26 @@ public class FilmDbStorage implements FilmStorage {
                         "LIMIT ?";
 
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
+    }
+
+    @Override
+    public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
+        String sqlQuery =
+                "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
+                        "FROM films " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
+                        "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID " +
+                        "WHERE g.id = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ?" +
+                        "GROUP BY films.film_id, gt.NAME " +
+                        "ORDER BY count DESC" +
+                        "LIMIT ?";
+
+        if (genre == -1 || year == -1) {
+            throw new ValidationException("Неверный запрос. Поля жанра и года обязательны к заполнению");
+        } else {
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, year, count);
+        }
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
