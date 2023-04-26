@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
+
     @Override
     public Film getFilmById(Integer id) {
         final String getFilmSqlQuery =
@@ -517,8 +518,7 @@ public class FilmDbStorage implements FilmStorage {
                 System.out.println(genre.getName());
                 System.out.println(genre.getId());
                 genres.add(genre);
-            }
-        }
+            }}
         while (rs.next());
 
         return genres;
