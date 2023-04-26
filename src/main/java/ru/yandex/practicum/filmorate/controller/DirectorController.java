@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping( "/directors")
+@RequestMapping("/directors")
 public class DirectorController {
     private final DirectorService directorService;
 
