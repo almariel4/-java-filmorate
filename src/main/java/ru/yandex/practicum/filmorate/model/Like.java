@@ -19,4 +19,10 @@ public class Like {
     @NotNull
     @Positive
     private Integer filmId;
+
+    public Like(Integer id, Integer userId, Integer filmId) {
+        this.id = id;
+        this.userId = userId;
+        this.filmId = filmId;
+    }
 }
