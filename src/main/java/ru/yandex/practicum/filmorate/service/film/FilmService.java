@@ -39,11 +39,7 @@ public class FilmService {
         return filmStorage.deleteLike(filmId, userId);
     }
 
-    public List<Film> getTopFilms(int count) {
-        return filmStorage.getRating(count);
-    }
-
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
-        return filmStorage.getBestFilmsOfGenreAndYear(count, genre, year);
+        return filmStorage.getPopularFIlms(count, genre, year);
     }
 }

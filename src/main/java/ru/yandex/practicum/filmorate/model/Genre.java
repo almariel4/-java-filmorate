@@ -18,4 +18,8 @@ public class Genre {
         this.id = id;
         this.name = name;
     }
+
+    public int compareTo(Genre genre) {
+        return (genre.getId().compareTo(this.getId())) * -1;
+    }
 }
