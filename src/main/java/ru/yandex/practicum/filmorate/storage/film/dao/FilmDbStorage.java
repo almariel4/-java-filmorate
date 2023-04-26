@@ -156,6 +156,38 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
     }
 
+    @Override
+    public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
+        String sqlQuery;
+        String sqlQueryStart =
+                "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
+                        "FROM films " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
+                        "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID ";
+
+
+        String sqlQueryFinish = "GROUP BY films.film_id, gt.NAME " +
+                "ORDER BY count DESC " +
+                "LIMIT ?";
+
+        if (year == -1 && genre == -1) {
+            return getRating(count);
+        } else if (genre == -1 && year > 0) {
+            String sqlQueryMiddle = "WHERE EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, year, count);
+        } else if (genre > 0 && year == -1) {
+            String sqlQueryMiddle = "WHERE G.GENRE_ID = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, count);
+        } else {
+            String sqlQueryMiddle = "WHERE G.GENRE_ID = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
+            return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, year, count);
+        }
+    }
+
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         Film film = Film.builder()
                 .id(resultSet.getInt("film_id"))
