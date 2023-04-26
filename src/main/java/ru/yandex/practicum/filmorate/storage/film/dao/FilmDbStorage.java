@@ -518,8 +518,8 @@ public class FilmDbStorage implements FilmStorage {
                 System.out.println(genre.getName());
                 System.out.println(genre.getId());
                 genres.add(genre);
-            }}
-        while (rs.next());
+            }
+        } while (rs.next());
 
         return genres;
     }
