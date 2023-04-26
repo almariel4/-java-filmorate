@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.dao.GenreDbStorage;
@@ -159,27 +158,32 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
-        String sql = "WHERE G.GENRE_ID = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
-            String sqlQuery =
-                    "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
-                            "FROM films " +
-                            "LEFT JOIN likes l ON films.film_id=l.film_id " +
-                            "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
-                            "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID " +
-                            sql +
-                            "GROUP BY films.film_id, gt.NAME " +
-                            "ORDER BY count DESC " +
-                            "LIMIT ?";
+        String sqlQuery;
+        String sqlQueryStart =
+                "SELECT films.*, COUNT(l.film_id) as count, G.*, GT.* " +
+                        "FROM films " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "LEFT JOIN GENRE G on FILMS.FILM_ID = G.FILM_ID " +
+                        "LEFT JOIN GENRE_TYPE GT on G.ID = GT.GENRE_ID ";
+
+
+        String sqlQueryFinish = "GROUP BY films.film_id, gt.NAME " +
+                "ORDER BY count DESC " +
+                "LIMIT ?";
 
         if (year == -1 && genre == -1) {
             return getRating(count);
-        } else if (genre == -1 && year  > 0) {
-            sql = "WHERE EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+        } else if (genre == -1 && year > 0) {
+            String sqlQueryMiddle = "WHERE EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
             return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, year, count);
         } else if (genre > 0 && year == -1) {
-            sql = "WHERE G.GENRE_ID = ? ";
+            String sqlQueryMiddle = "WHERE G.GENRE_ID = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
             return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, count);
         } else {
+            String sqlQueryMiddle = "WHERE G.GENRE_ID = ? AND EXTRACT(YEAR FROM CAST(FILMS.RELEASE_DATE AS DATE)) = ? ";
+            sqlQuery = sqlQueryStart + sqlQueryMiddle + sqlQueryFinish;
             return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, genre, year, count);
         }
     }
