@@ -38,5 +38,5 @@ public class Film {
 
     private Set<Genre> genres;
 
-    private Set<Director> director;
+    private Set<Director> directors;
 }

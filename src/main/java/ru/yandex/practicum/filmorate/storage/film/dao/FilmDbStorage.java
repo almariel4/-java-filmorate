@@ -63,7 +63,7 @@ public class FilmDbStorage implements FilmStorage {
                     .build();
             film.setGenres(getGenre(film.getId()));
             film.setLikes(getLikes(film.getId()));
-            film.setDirector(getFilmDirectors(film.getId()));
+            film.setDirectors(getFilmDirectors(film.getId()));
 
             films.add(film);
         }
@@ -107,7 +107,7 @@ public class FilmDbStorage implements FilmStorage {
         updateGenres(film);
         addGenreName(film);
         updateDirectorsFilm(film);
-        film.setDirector(getFilmDirectors(film.getId()));
+        film.setDirectors(getFilmDirectors(film.getId()));
         film.setGenres(getGenre(film.getId()));
 
         if (rowsCount > 0) {
@@ -234,7 +234,7 @@ public class FilmDbStorage implements FilmStorage {
                     .build();
             film.setGenres(getGenre(film.getId()));
             film.setLikes(getLikes(film.getId()));
-            film.setDirector(getFilmDirectors(film.getId()));
+            film.setDirectors(getFilmDirectors(film.getId()));
 
             films.add(film);
         }
@@ -387,20 +387,20 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public void addDirectorForCurrentFilm(Film film) {
-        if (Objects.isNull(film.getDirector())) {
+        if (Objects.isNull(film.getDirectors())) {
             return;
         }
 
         try {
-            film.getDirector().forEach(d -> {
+            film.getDirectors().forEach(d -> {
                 String sqlQuery = "INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)";
                 jdbcTemplate.update(sqlQuery,
                         film.getId(),
                         d.getId());
             });
         } catch (DataIntegrityViolationException e) {
-            log.error("Один из режисёров не найден: {}", film.getDirector());
-            throw new NotFoundException("Один из режисёров не найден: " + film.getDirector());
+            log.error("Один из режисёров не найден: {}", film.getDirectors());
+            throw new NotFoundException("Один из режисёров не найден: " + film.getDirectors());
         }
     }
 
@@ -424,10 +424,10 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public void addDirectorNameToFilm(Film film) {
-        if (Objects.isNull(film.getDirector())) {
+        if (Objects.isNull(film.getDirectors())) {
             return;
         }
-        film.getDirector().forEach(d -> d.setName(getDirectorById(d.getId()).getName()));
+        film.getDirectors().forEach(d -> d.setName(getDirectorById(d.getId()).getName()));
     }
 
     public void updateDirectorsFilm(Film film) {
@@ -502,7 +502,7 @@ public class FilmDbStorage implements FilmStorage {
                 .mpa(mpa)
                 .genres(genres)
                 .likes(likes)
-                .director(directors)
+                .directors(directors)
                 .build();
     }
 

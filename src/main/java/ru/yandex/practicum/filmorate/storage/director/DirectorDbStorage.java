@@ -86,20 +86,20 @@ public class DirectorDbStorage implements DirectorStorage {
 
     @Override
     public void addDirectorForCurrentFilm(Film film) {
-        if (Objects.isNull(film.getDirector())) {
+        if (Objects.isNull(film.getDirectors())) {
             return;
         }
 
         try {
-            film.getDirector().forEach(d -> {
+            film.getDirectors().forEach(d -> {
                 String sqlQuery = "INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)";
                 jdbcTemplate.update(sqlQuery,
                         film.getId(),
                         d.getId());
             });
         } catch (DataIntegrityViolationException e) {
-            log.error("Один из режисёров не найден: {}", film.getDirector());
-            throw new NotFoundException("Один из режисёров не найден: " + film.getDirector());
+            log.error("Один из режисёров не найден: {}", film.getDirectors());
+            throw new NotFoundException("Один из режисёров не найден: " + film.getDirectors());
         }
     }
 
@@ -112,10 +112,10 @@ public class DirectorDbStorage implements DirectorStorage {
 
     @Override
     public void addDirectorNameToFilm(Film film) {
-        if (Objects.isNull(film.getDirector())) {
+        if (Objects.isNull(film.getDirectors())) {
             return;
         }
-        film.getDirector().forEach(d -> d.setName(getDirectorById(d.getId()).getName()));
+        film.getDirectors().forEach(d -> d.setName(getDirectorById(d.getId()).getName()));
     }
 
     @Override
