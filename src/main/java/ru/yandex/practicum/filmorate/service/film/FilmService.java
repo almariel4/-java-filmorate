@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -42,5 +43,15 @@ public class FilmService {
     public List<Film> getTopFilms(int count) {
         return filmStorage.getRating(count);
 
+    }
+
+    public List<Film> getSearchResults(String query, String by) {
+        List<Film> searchResults = new ArrayList<>();
+        if (by.equals("title")) {
+            searchResults =  filmStorage.searchByTitle(query);
+        } else if (by.equals("director")) {
+            searchResults = filmStorage.searchByDirector(query);
+        }
+        return searchResults;
     }
 }

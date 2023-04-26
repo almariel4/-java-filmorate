@@ -156,9 +156,31 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
     }
 
+    @Override
+    public List<Film> searchByTitle(String query) {
+        String sqlQuery =
+                "SELECT films.*, COUNT(l.film_id) AS count " +
+                        "FROM films " +
+                        "WHERE name LIKE %?% " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id" +
+                        "ORDER BY count DESC";
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, query);
+    }
+
+    @Override
+    public List<Film> searchByDirector(String query) {
+        String sqlQuery =
+                "SELECT films.* " +
+                        "FROM films " +
+                        "WHERE director LIKE %?% " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "ORDER BY count DESC";
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, query);
+    }
+
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         Film film = Film.builder()
-                .id(resultSet.getInt("film_id"))
+                 .id(resultSet.getInt("film_id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
