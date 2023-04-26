@@ -12,3 +12,5 @@ INSERT INTO GENRE_TYPE (GENRE_ID, NAME)
             (4, 'Триллер'),
             (5, 'Документальный'),
             (6, 'Боевик');
+
+INSERT INTO DIRECTORS (NAME) VALUES ('director');
