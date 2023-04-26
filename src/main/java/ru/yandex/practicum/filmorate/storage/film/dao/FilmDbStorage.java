@@ -107,7 +107,6 @@ public class FilmDbStorage implements FilmStorage {
         throw new NotFoundException("Фильм не найден.");
     }
 
-
     @Override
     public Film like(Integer filmId, Integer userId) {
         Film film = getFilmById(filmId);
@@ -183,31 +182,6 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        Film film = Film.builder()
-                .id(resultSet.getInt("film_id"))
-                .name(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
-                .releaseDate(resultSet.getDate("release_date").toLocalDate())
-                .duration(resultSet.getInt("duration"))
-                .mpa(getMpaById(resultSet.getInt("rating_mpa_id")))
-                .build();
-        film.setLikes(getLikesForCurrentFilm(film.getId()));
-        film.setGenres(getGenreForCurrentFilm(film.getId()));
-
-        return film;
-    }
-
-    private Map<String, Object> toMap(Film film) {
-        Map<String, Object> values = new HashMap<>();
-        values.put("name", film.getName());
-        values.put("description", film.getDescription());
-        values.put("release_date", film.getReleaseDate());
-        values.put("duration", film.getDuration());
-        values.put("rating_mpa_id", film.getMpa().getId());
-        return values;
-    }
-
     public Mpa getMpaById(int mpaId) {
         String sqlQuery =
                 "SELECT rating_mpa_id, name " +
@@ -246,6 +220,7 @@ public class FilmDbStorage implements FilmStorage {
         }
         return mpaList;
     }
+
     private Mpa mapRowToMpa(ResultSet resultSet, int rowNum) throws SQLException {
         return Mpa.builder()
                 .id(resultSet.getInt("rating_mpa_id"))
@@ -265,6 +240,7 @@ public class FilmDbStorage implements FilmStorage {
             throw new NotFoundException("Жанр не найден.");
         }
     }
+
     public Set<Genre> getGenreForCurrentFilm(int id) {
         Set<Genre> genreSet = new LinkedHashSet<>();
 
@@ -312,12 +288,6 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sqlQuery, film.getId());
         addGenresForCurrentFilm(film);
     }
-    private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
-        return Genre.builder()
-                .id(resultSet.getInt("genre_id"))
-                .name(resultSet.getString("name"))
-                .build();
-    }
 
     public User getUserById(Integer id) {
         String sqlQuery =
@@ -343,18 +313,6 @@ public class FilmDbStorage implements FilmStorage {
 
         return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
     }
-    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = User.builder()
-                .id(resultSet.getInt("user_id"))
-                .email(resultSet.getString("email"))
-                .login(resultSet.getString("login"))
-                .name(resultSet.getString("name"))
-                .birthday(resultSet.getDate("birthday").toLocalDate())
-                .build();
-        user.setFriends(getFriendsByUserId(user.getId()).stream().map(User::getId).collect(Collectors.toSet()));
-
-        return user;
-    }
 
     public Set<Integer> getLikesForCurrentFilm(int id) {
         Set<Integer> likes = new HashSet<>();
@@ -368,5 +326,50 @@ public class FilmDbStorage implements FilmStorage {
             }
         }
         return likes;
+    }
+
+    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
+        Film film = Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(getMpaById(resultSet.getInt("rating_mpa_id")))
+                .build();
+        film.setLikes(getLikesForCurrentFilm(film.getId()));
+        film.setGenres(getGenreForCurrentFilm(film.getId()));
+
+        return film;
+    }
+
+    private Map<String, Object> toMap(Film film) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", film.getName());
+        values.put("description", film.getDescription());
+        values.put("release_date", film.getReleaseDate());
+        values.put("duration", film.getDuration());
+        values.put("rating_mpa_id", film.getMpa().getId());
+        return values;
+    }
+
+    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
+        User user = User.builder()
+                .id(resultSet.getInt("user_id"))
+                .email(resultSet.getString("email"))
+                .login(resultSet.getString("login"))
+                .name(resultSet.getString("name"))
+                .birthday(resultSet.getDate("birthday").toLocalDate())
+                .build();
+        user.setFriends(getFriendsByUserId(user.getId()).stream().map(User::getId).collect(Collectors.toSet()));
+
+        return user;
+    }
+
+    private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
+        return Genre.builder()
+                .id(resultSet.getInt("genre_id"))
+                .name(resultSet.getString("name"))
+                .build();
     }
 }
