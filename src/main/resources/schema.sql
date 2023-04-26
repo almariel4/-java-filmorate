@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS genre
 CREATE TABLE IF NOT EXISTS director_films
 (
     film_id INTEGER NOT NULL REFERENCES films (film_id),
-    director_id INTEGER NOT NULL REFERENCES directors (director_id),
+    director_id INTEGER NOT NULL REFERENCES directors (director_id) ON DELETE CASCADE,
     PRIMARY KEY (film_id, director_id)
 );
 
