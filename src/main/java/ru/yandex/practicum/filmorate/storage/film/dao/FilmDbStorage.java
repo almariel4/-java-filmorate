@@ -393,7 +393,10 @@ public class FilmDbStorage implements FilmStorage {
 
         try {
             film.getDirectors().forEach(d -> {
-                String sqlQuery = "INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)";
+                String sqlQuery =
+                        "INSERT " +
+                                "INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) " +
+                                "VALUES (?, ?)";
                 jdbcTemplate.update(sqlQuery,
                         film.getId(),
                         d.getId());
@@ -405,8 +408,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public LinkedHashSet<Director> getFilmDirectors(Integer filmId) {
-        String sql = "SELECT d.DIRECTOR_ID, d.name FROM DIRECTOR_FILMS AS df LEFT JOIN DIRECTORS AS d ON df.DIRECTOR_ID = d.DIRECTOR_ID WHERE df.film_id = ?";
+        String sql =
+                "SELECT d.DIRECTOR_ID, d.name " +
+                        "FROM DIRECTOR_FILMS AS df " +
+                        "LEFT JOIN DIRECTORS AS d ON df.DIRECTOR_ID = d.DIRECTOR_ID " +
+                        "WHERE df.film_id = ?";
+
         Collection<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> makeDirector(rs), filmId);
+
         return new LinkedHashSet<>(directors);
     }
 
@@ -431,7 +440,10 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public void updateDirectorsFilm(Film film) {
-        String sql = "DELETE FROM DIRECTOR_FILMS WHERE FILM_ID = ?";
+        String sql =
+                "DELETE " +
+                        "FROM DIRECTOR_FILMS " +
+                        "WHERE FILM_ID = ?";
         jdbcTemplate.update(sql, film.getId());
         addDirectorForCurrentFilm(film);
     }
