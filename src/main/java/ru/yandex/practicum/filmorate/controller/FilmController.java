@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Slf4j
@@ -60,6 +61,14 @@ public class FilmController {
         log.info("Поступил запрос на получение списка популярных фильмов по годам и жанрам.");
         log.info("count {}, genre {} , year {}", count, genreId, year);
         return filmService.getBestFilmsOfGenreAndYear(count, genreId, year);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public LinkedHashSet<Film> filmsByDirector(@PathVariable int directorId, @RequestParam String sortBy) {
+        log.info("Поступил /GET запрос на получение списка фильмов режиссера");
+        LinkedHashSet<Film> films = filmService.filmsByDirector(directorId, sortBy);
+        log.info("Ответ отправлен: {}", films);
+        return films;
     }
 
     @GetMapping("/search")
