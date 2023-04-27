@@ -156,8 +156,32 @@ public class FilmDbStorageTest {
 
     @Test
     @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
-    void getCommonFilms() {
+    void getCommonFilmsSortedByPopularityGeneralCase() {
         List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
         assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 2);
+        filmDbStorage.like(1,3);
+        filmDbStorage.like(1,4);
+        filmDbStorage.like(1,5);
+        List<Film> common2 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common2.get(0)).hasFieldOrPropertyWithValue("id", 1);
+        filmDbStorage.deleteLike(1, 5);
+        List<Film> common3 = filmDbStorage.getCommonFilms(1,5);
+        assertThat(common3.isEmpty()).isTrue();
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilmsSortedByPopularityEmptyList() {
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,5);
+        assertThat(common1.isEmpty()).isTrue();
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilmsSortedByPopularityEqualLikesNumber() {
+        filmDbStorage.deleteLike(2, 3);
+        filmDbStorage.deleteLike(2, 4);
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 1);
     }
 }

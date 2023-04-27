@@ -33,10 +33,11 @@ INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID)
            (1, 3),
            (2, 1);
 
-INSERT INTO likes (film_id, user_id) VALUES (1, 1);
-INSERT INTO likes (film_id, user_id) VALUES (1, 2);
-INSERT INTO likes (film_id, user_id) VALUES (2, 1);
-INSERT INTO likes (film_id, user_id) VALUES (2, 2);
-INSERT INTO likes (film_id, user_id) VALUES (2, 3);
-INSERT INTO likes (film_id, user_id) VALUES (2, 4);
+INSERT INTO likes (film_id, user_id)
+    VALUES (1, 1),
+           (1, 2),
+           (2, 1),
+           (2, 2),
+           (2, 3),
+           (2, 4);
 
