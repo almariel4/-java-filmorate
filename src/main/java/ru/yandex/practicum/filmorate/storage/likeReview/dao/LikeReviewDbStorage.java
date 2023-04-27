@@ -16,6 +16,7 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
         String sqlQuery = "INSERT " +
                 "INTO like_review (review_id, user_id, is_positive) " +
                 "VALUES (?, ?, TRUE)";
+
         jdbcTemplate.update(sqlQuery, id, userId);
     }
 
@@ -24,6 +25,7 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
         String sqlQuery = "INSERT " +
                 "INTO like_review (review_id, user_id, is_positive) " +
                 "VALUES (?, ?, FALSE)";
+
         jdbcTemplate.update(sqlQuery, id, userId);
     }
 
@@ -34,6 +36,7 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
                 "WHERE review_id = ? " +
                 "AND user_id = ? " +
                 "AND is_positive = TRUE";
+
         jdbcTemplate.update(sqlQuery, id, userId);
     }
 
@@ -44,6 +47,7 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
                 "WHERE review_id = ? " +
                 "AND user_id = ? " +
                 "AND is_positive = FALSE";
+
         jdbcTemplate.update(sqlQuery, id, userId);
     }
 

@@ -31,6 +31,7 @@ public class ReviewBdStorage implements ReviewStorage {
         if (film(review.getFilmId()) && user(review.getUserId())) {
             String sqlQuery = "INSERT INTO REVIEWS (CONTENT, IS_POSITIVE, USER_ID, FILM_ID)" +
                     "values (?, ?, ?, ?)";
+
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"REVIEW_ID"});
@@ -50,6 +51,7 @@ public class ReviewBdStorage implements ReviewStorage {
     public Optional<Review> update(Review review) {
         String sqlQuery = "UPDATE REVIEWS SET CONTENT = ?, IS_POSITIVE = ?" +
                 " WHERE REVIEW_ID = ?";
+
         int result = jdbcTemplate.update(sqlQuery,
                 review.getContent(),
                 review.getIsPositive(),
@@ -66,6 +68,7 @@ public class ReviewBdStorage implements ReviewStorage {
                 "DELETE " +
                         "FROM REVIEWS " +
                         "WHERE REVIEW_ID = ?";
+
         int result = jdbcTemplate.update(sql, id);
         if (result == 1)
             log.info("Удалён отзыв id {}", id);
@@ -75,16 +78,18 @@ public class ReviewBdStorage implements ReviewStorage {
 
     @Override
     public Optional<Review> findById(int id) {
-        SqlRowSet reviewRows = jdbcTemplate.queryForRowSet("SELECT r.*, (COUNT(LRT.USER_ID) - COUNT(LRF.USER_ID)) AS USE " +
+        SqlRowSet reviewRows = jdbcTemplate.queryForRowSet("SELECT r.*, " +
+                "(COUNT(LRT.USER_ID) - COUNT(LRF.USER_ID)) AS USE " +
                 "FROM REVIEWS AS r " +
                 "LEFT JOIN (SELECT * FROM LIKE_REVIEW WHERE IS_POSITIVE = true) LRT on r.REVIEW_ID = LRT.REVIEW_ID " +
                 "LEFT JOIN (SELECT * FROM LIKE_REVIEW WHERE IS_POSITIVE = false) LRF on r.REVIEW_ID = LRF.REVIEW_ID " +
                 " WHERE r.REVIEW_ID = ? GROUP BY r.REVIEW_ID", id);
+
         if (reviewRows.next()) {
             return Optional.of(reviewRows(reviewRows));
         } else log.info("Фильм с идентификатором {} не найден.", id);
         return Optional.empty();
-    } //Получение отзыва по идентификатору.
+    }
 
     @Override
     public List<Review> findAll(int filmId, int count) {
@@ -100,6 +105,7 @@ public class ReviewBdStorage implements ReviewStorage {
                 " GROUP BY r.REVIEW_ID " +
                 " ORDER BY COUNT(LRT.USER_ID) - COUNT(LRF.USER_ID) DESC" +
                 " LIMIT " + count;
+
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeReview(rs));
     }
 
