@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Slf4j
@@ -41,5 +42,9 @@ public class FilmService {
 
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
         return filmStorage.getPopularFIlms(count, genre, year);
+    }
+
+    public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
+        return filmStorage.filmsByDirector(directorId, sortBy);
     }
 }
