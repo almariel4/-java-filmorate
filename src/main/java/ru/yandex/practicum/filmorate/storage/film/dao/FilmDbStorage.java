@@ -193,6 +193,26 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public List<Film> getRating(int count) {
+        return null;
+    }
+
+    @Override
+    public List<Film> searchByTitle(String query) {
+        return null;
+    }
+
+    @Override
+    public List<Film> searchByDirector(String query) {
+        return null;
+    }
+
+    @Override
+    public List<Film> searchByBothParam(String query) {
+        return null;
+    }
+
     public Mpa getMpaById(int mpaId) {
         String sqlQuery =
                 "SELECT rating_mpa_id, name " +

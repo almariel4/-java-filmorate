@@ -50,6 +50,8 @@ public class FilmService {
             searchResults =  filmStorage.searchByTitle(query);
         } else if (by.equals("director")) {
             searchResults = filmStorage.searchByDirector(query);
+        } 	else if (by.equals("tile,director")) {
+            searchResults = filmStorage.searchByBothParam(query);
         }
         return searchResults;
     }
