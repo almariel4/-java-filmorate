@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
 
@@ -42,7 +43,7 @@ public class ReviewBdStorage implements ReviewStorage {
             review.setReviewId(Objects.requireNonNull(keyHolder.getKey()).intValue());
             return review;
         } else
-            throw new NotFoundException("Отзыв не добавлен.");
+            throw new ValidationException("Отзыв не добавлен.");
     }
 
     @Override
@@ -121,25 +122,27 @@ public class ReviewBdStorage implements ReviewStorage {
     }
 
 
-
-    private boolean film(int id) {
+    private boolean film(Integer id) {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * " +
                 "FROM FILMS " +
                 "WHERE FILM_ID = ?", id);
         if (filmRows.next()) {
             return true;
         } else log.info("Фильм с идентификатором {} не найден.", id);
-        return false;
+        if (id == 0) {
+            throw new ValidationException("Фильм не найден.");
+        } else
+            throw new NotFoundException("Фильм не найден.");
     }
 
     private boolean user(int id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT * " +
-                "FROM USERS_FILMS " +
+                "FROM USERS " +
                 "WHERE USER_ID = ?", id);
         if (userRows.next()) {
             return true;
         } else log.info("Пользователь с идентификатором {} не найден.", id);
-        return false;
+        throw new NotFoundException("Пользователь не найден.");
     }
 
 }
