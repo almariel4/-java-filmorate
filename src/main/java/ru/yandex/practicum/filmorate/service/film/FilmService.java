@@ -50,14 +50,6 @@ public class FilmService {
     }
 
     public List<Film> getSearchResults(String query, String by) {
-        List<Film> searchResults = new ArrayList<>();
-        if (by.equals("title")) {
-            searchResults =  filmStorage.searchByTitle(query);
-        } else if (by.equals("director")) {
-            searchResults = filmStorage.searchByDirector(query);
-        } 	else if (by.equals("tile,director")) {
-            searchResults = filmStorage.searchByBothParam(query);
-        }
-        return searchResults;
+       return filmStorage.searchBy(query, by);
     }
 }

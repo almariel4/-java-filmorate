@@ -22,11 +22,5 @@ public interface FilmStorage {
 
     LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
 
-    List<Film> getRating(int count);
-
-    List<Film> searchByTitle(String query);
-
-    List<Film> searchByDirector(String query);
-
-    List<Film> searchByBothParam(String query);
+    List<Film> searchBy(String query, String by);
 }
