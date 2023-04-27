@@ -448,6 +448,23 @@ public class FilmDbStorage implements FilmStorage {
         addDirectorForCurrentFilm(film);
     }
 
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        String sqlQuery = "SELECT f.*, gt.genre_id, gt.name AS genre_name, " +
+                "COUNT(l3.film_id) FROM films AS f " +
+                "LEFT JOIN genre AS g ON f.film_id = g.film_id " +
+                "LEFT JOIN genre_type AS gt ON g.genre_id = gt.genre_id " +
+                "LEFT JOIN likes AS l1 ON f.film_id = l1.film_id " +
+                "LEFT JOIN users AS u1 ON l1.user_id = u1.user_id " +
+                "LEFT JOIN likes AS l2 ON l1.film_id = l2.film_id " +
+                "LEFT JOIN users AS u2 ON l2.user_id = u2.user_id " +
+                "LEFT JOIN likes AS l3 ON f.film_id = l3.film_id " +
+                "WHERE u1.user_id = ? AND u2.user_id = ? " +
+                "GROUP BY f.film_id " +
+                "ORDER BY COUNT(l3.film_id) DESC";
+        return jdbcTemplate.query(sqlQuery, this::makeFilm, userId, friendId);
+    }
+
     private Map<String, Object> toMap(Film film) {
         Map<String, Object> values = new HashMap<>();
         values.put("name", film.getName());

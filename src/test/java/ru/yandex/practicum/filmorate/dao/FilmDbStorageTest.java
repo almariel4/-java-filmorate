@@ -15,6 +15,8 @@ import ru.yandex.practicum.filmorate.storage.film.dao.FilmDbStorage;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJdbcTest
 @Sql(value = {"/schematest.sql", "/datatest.sql"})
 public class FilmDbStorageTest {
@@ -150,5 +152,12 @@ public class FilmDbStorageTest {
         directorFilms.add(filmDbStorage.getFilmById(1));
         directorFilms.add(filmDbStorage.getFilmById(2));
         Assertions.assertEquals(directorFilms, filmDbStorage.filmsByDirector(1, "likes"));
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilms() {
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 2);
     }
 }
