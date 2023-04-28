@@ -70,4 +70,10 @@ public class FilmController {
         log.info("Ответ отправлен: {}", films);
         return films;
     }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Поступил запрос на получение общих фильмов у пользователей {} и {}.", userId, friendId);
+        return filmService.getCommonFilms(userId, friendId);
+    }
 }

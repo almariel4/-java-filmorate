@@ -21,4 +21,6 @@ public interface FilmStorage {
     List<Film> getPopularFIlms(int count, int genre, int year);
 
     LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
+
+    List<Film> getCommonFilms(int userId, int friendId);
 }

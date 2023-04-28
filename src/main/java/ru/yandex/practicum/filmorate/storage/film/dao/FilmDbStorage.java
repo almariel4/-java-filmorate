@@ -448,6 +448,31 @@ public class FilmDbStorage implements FilmStorage {
         addDirectorForCurrentFilm(film);
     }
 
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        String sqlQuery = "SELECT f.*, " +
+                "COUNT(l3.film_id) FROM films AS f " +
+                "LEFT JOIN likes AS l1 ON f.film_id = l1.film_id " +
+                "LEFT JOIN users AS u1 ON l1.user_id = u1.user_id " +
+                "LEFT JOIN likes AS l2 ON l1.film_id = l2.film_id " +
+                "LEFT JOIN users AS u2 ON l2.user_id = u2.user_id " +
+                "LEFT JOIN likes AS l3 ON f.film_id = l3.film_id " +
+                "WHERE u1.user_id = ? AND u2.user_id = ? " +
+                "GROUP BY f.film_id " +
+                "ORDER BY COUNT(l3.film_id) DESC, f.film_id";
+
+        return jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(Objects.requireNonNull(resultSet.getDate("release_date")).toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(getMpaById(resultSet.getInt("rating_mpa_id")))
+                .genres(getGenre(resultSet.getInt("film_id")))
+                .likes(getLikes(resultSet.getInt("film_id")))
+                .build(), userId, friendId);
+    }
+
     private Map<String, Object> toMap(Film film) {
         Map<String, Object> values = new HashMap<>();
         values.put("name", film.getName());

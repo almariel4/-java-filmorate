@@ -47,4 +47,8 @@ public class FilmService {
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
         return filmStorage.filmsByDirector(directorId, sortBy);
     }
+
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
 }
