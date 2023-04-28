@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -242,28 +243,52 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getRating(int count) {
-        return null;
-    }
+    public List<Film> searchBy(String query, String by) {
+        List<Film> searchResults = new ArrayList<>();
 
-    @Override
-    public List<Film> searchByTitle(String query) {
-        return null;
-    }
-
-    @Override
-    public List<Film> searchByDirector(String query) {
-        return null;
-    }
-
-    @Override
-    public List<Film> searchByBothParam(String query) {
-        return null;
+        switch (by) {
+            case "title": {
+                String sql = "SELECT films.*, COUNT(l.film_id) as count " +
+                        "FROM films " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
+                        "GROUP BY films.film_id " +
+                        "ORDER BY count DESC";
+                jdbcTemplate.query(sql, this::makeFilm, query);
+                break;
+            }
+            case "director": {
+                String sql = "SELECT films.*, COUNT(l.film_id) as count " +
+                        "FROM films " +
+                                    "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
+                                    "JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "WHERE LOWER(d.name) LIKE LOWER('%?%') " +
+                        "GROUP BY films.film_id " +
+                        "ORDER BY count DESC";
+                searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
+                break;
+            }
+            case "tile,director": {
+                String sql = "SELECT films.*, COUNT(l.film_id) as count " +
+                        "FROM films " +
+                                    "LEFT JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
+                                    "LEFT JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
+                            "OR LOWER(d.name) LIKE LOWER('%?%') " +
+                        "GROUP BY films.film_id " +
+                        "ORDER BY count DESC";
+                searchResults = jdbcTemplate.query(sql, this::makeFilm, query, query);
+                break;
+            }
+        }
+        return searchResults;
     }
 
     public Mpa getMpaById(int mpaId) {
         String sqlQuery =
-                "SELECT rating_mpa_id, name " +
+                "SELECT ratintg_mpa_id, name " +
                         "FROM mpa_type " +
                         "WHERE rating_mpa_id=?";
 

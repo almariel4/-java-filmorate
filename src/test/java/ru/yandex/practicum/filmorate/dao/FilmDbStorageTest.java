@@ -184,4 +184,38 @@ public class FilmDbStorageTest {
         List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
         assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 1);
     }
+
+    @Test
+//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getFilmsByTitle() {
+        List<Film> films = filmDbStorage.searchBy("док", "title");
+
+        Assertions.assertEquals(films.size(), 3);
+        Assertions.assertEquals(films.get(0).getId(), 3);
+        Assertions.assertEquals(films.get(1).getId(), 4);
+        Assertions.assertEquals(films.get(2).getId(), 5);
+    }
+
+    @Test
+//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getFilmsByDirector() {
+        List<Film> films = filmDbStorage.searchBy("ква", "director");
+
+        Assertions.assertEquals(films.size(), 2);
+        Assertions.assertEquals(films.get(0).getId(), 7);
+        Assertions.assertEquals(films.get(1).getId(), 6);
+    }
+
+    @Test
+//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getFilmsByTitleAndDirector() {
+        List<Film> films = filmDbStorage.searchBy("к", "title,director");
+
+        Assertions.assertEquals(films.size(), 5);
+        Assertions.assertEquals(films.get(0).getId(), 3);
+        Assertions.assertEquals(films.get(0).getId(), 4);
+        Assertions.assertEquals(films.get(0).getId(), 7);
+        Assertions.assertEquals(films.get(0).getId(), 6);
+        Assertions.assertEquals(films.get(1).getId(), 5);
+    }
 }
