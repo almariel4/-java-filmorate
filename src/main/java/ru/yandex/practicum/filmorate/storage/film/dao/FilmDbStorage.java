@@ -250,7 +250,7 @@ public class FilmDbStorage implements FilmStorage {
             case "title": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
-                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
@@ -260,9 +260,9 @@ public class FilmDbStorage implements FilmStorage {
             case "director": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
-                        "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
-                        "JOIN DIRECTORS d ON df.director_id=d.director_id " +
-                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                                    "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
+                                    "JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(d.name) LIKE LOWER('%?%') " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
@@ -272,11 +272,11 @@ public class FilmDbStorage implements FilmStorage {
             case "tile,director": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
-                        "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
-                        "JOIN DIRECTORS d ON df.director_id=d.director_id " +
-                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                                    "LEFT JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
+                                    "LEFT JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
-                        "OR LOWER(d.name) LIKE LOWER('%?%') " +
+                            "OR LOWER(d.name) LIKE LOWER('%?%') " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
                 searchResults = jdbcTemplate.query(sql, this::makeFilm, query, query);

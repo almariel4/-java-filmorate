@@ -40,7 +40,7 @@ INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID)
 -- для тестов поиска
 INSERT INTO DIRECTORS (NAME)
     VALUES('Дэн Кван'),
-    ('Скотт Дерриксон')
+    ('Скотт Дерриксон');
 
 -- для тестов поиска
 -- для однокоренных фильмов
@@ -58,5 +58,24 @@ INSERT INTO films (name, description, release_date, duration, rating_mpa_id)
 -- для тестов поиска
 INSERT INTO DIRECTOR_FILMS (film_id, director_id)
     VALUES (3, 3),
-     (6, 2),
-     (7, 2)
+           (6, 2),
+           (7, 2);
+
+INSERT INTO LIKES (FILM_ID, USER_ID)
+    VALUES (6, 1),
+           (7, 1),
+           (7, 2),
+           (3, 1),
+           (3, 2),
+           (3, 3),
+           (4, 1),
+           (4, 2);
+
+
+INSERT INTO GENRE (FILM_ID, GENRE_ID)
+VALUES (3, 6),
+       (4, 5),
+       (5, 1),
+       (6, 6),
+       (6, 1),
+       (7, 2);
