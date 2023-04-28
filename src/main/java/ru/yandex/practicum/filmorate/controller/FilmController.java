@@ -71,6 +71,12 @@ public class FilmController {
         return films;
     }
 
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Поступил запрос на получение общих фильмов у пользователей {} и {}.", userId, friendId);
+        return filmService.getCommonFilms(userId, friendId);
+    }
+
     @GetMapping("/search")
     public List<Film> getSearchResults(@RequestParam String query, @RequestParam String by) {
         log.info("Поступил запрос на получение результатов поиска по фильмам.");

@@ -49,6 +49,10 @@ public class FilmService {
         return filmStorage.filmsByDirector(directorId, sortBy);
     }
 
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
     public List<Film> getSearchResults(String query, String by) {
         List<Film> searchResults = new ArrayList<>();
         if (by.equals("title")) {

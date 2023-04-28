@@ -15,6 +15,8 @@ import ru.yandex.practicum.filmorate.storage.film.dao.FilmDbStorage;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJdbcTest
 @Sql(value = {"/schematest.sql", "/datatest.sql"})
 public class FilmDbStorageTest {
@@ -150,5 +152,36 @@ public class FilmDbStorageTest {
         directorFilms.add(filmDbStorage.getFilmById(1));
         directorFilms.add(filmDbStorage.getFilmById(2));
         Assertions.assertEquals(directorFilms, filmDbStorage.filmsByDirector(1, "likes"));
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilmsSortedByPopularityGeneralCase() {
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 2);
+        filmDbStorage.like(1,3);
+        filmDbStorage.like(1,4);
+        filmDbStorage.like(1,5);
+        List<Film> common2 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common2.get(0)).hasFieldOrPropertyWithValue("id", 1);
+        filmDbStorage.deleteLike(1, 5);
+        List<Film> common3 = filmDbStorage.getCommonFilms(1,5);
+        assertThat(common3.isEmpty()).isTrue();
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilmsSortedByPopularityEmptyList() {
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,5);
+        assertThat(common1.isEmpty()).isTrue();
+    }
+
+    @Test
+    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    void getCommonFilmsSortedByPopularityEqualLikesNumber() {
+        filmDbStorage.deleteLike(2, 3);
+        filmDbStorage.deleteLike(2, 4);
+        List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
+        assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 1);
     }
 }

@@ -33,6 +33,11 @@ INSERT INTO GENRE (FILM_ID, GENRE_ID)
 INSERT INTO DIRECTORS (NAME)
     VALUES ('firstDirector');
 
-INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID)
+INSERT INTO DIRECTOR_FILMS (FILM_ID, DIRECTOR_ID)
     VALUES (1, 1),
            (2, 1);
+
+INSERT INTO REVIEWS (CONTENT, IS_POSITIVE, USER_ID, FILM_ID)
+    VALUES ('Positive test review', TRUE, 1, 1),
+           ('Negative test review', FALSE, 1, 1),
+           ('Negative test secondReview', FALSE, 1, 1);
