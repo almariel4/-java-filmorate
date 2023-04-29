@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.feed.Event;
+import ru.yandex.practicum.filmorate.model.feed.EventOperation;
+import ru.yandex.practicum.filmorate.model.feed.EventType;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -14,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final EventService eventService;
 
     public User getUserById(Integer userId) {
         return userStorage.getUserById(userId);
@@ -33,11 +38,13 @@ public class UserService {
 
     public User addFriend(Integer userId, Integer friendId) {
         userStorage.addFriend(userId, friendId);
+        eventService.createEvent(userId, EventType.FRIEND, EventOperation.ADD, friendId);
         return userStorage.getUserById(userId);
     }
 
     public User deleteFriend(Integer userId, Integer friendId) {
         userStorage.deleteFriend(userId, friendId);
+        eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
         return userStorage.getUserById(userId);
     }
 
@@ -47,5 +54,10 @@ public class UserService {
 
     public List<User> getCommonsFriends(Integer userId, Integer otherUserId) {
         return userStorage.getCommonsFriends(userId, otherUserId);
+    }
+
+    public List<Event> getFeed(Integer userId) {
+        getUserById(userId);
+        return eventService.getFeed(userId);
     }
 }

@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.feed.EventOperation;
+import ru.yandex.practicum.filmorate.model.feed.EventType;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.likeReview.LikeReviewStorage;
 import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
 
@@ -14,19 +17,26 @@ import java.util.List;
 public class ReviewService {
     private final ReviewStorage reviewStorage;
     private final LikeReviewStorage likeReviewStorage;
+    private final EventService eventService;
 
 
     public Review create(Review review) {
-        return reviewStorage.create(review);
+        Review reviewCreated = reviewStorage.create(review);
+        eventService.createEvent(reviewCreated.getUserId(), EventType.REVIEW, EventOperation.ADD, reviewCreated.getReviewId());
+        return reviewCreated;
     }
 
     public Review update(Review review) {
-        return reviewStorage.update(review).orElseThrow(() -> new NotFoundException("Отзыв не найден."));
+        Review reviewUpdated = reviewStorage.update(review).orElseThrow(() -> new NotFoundException("Отзыв не найден."));
+        eventService.createEvent(reviewUpdated.getUserId(), EventType.REVIEW, EventOperation.UPDATE, reviewUpdated.getReviewId());
+        return reviewUpdated;
     }
 
 
     public void delete(Integer id) {
+        Review review = findById(id);
         reviewStorage.delete(id);
+        eventService.createEvent(review.getUserId(), EventType.REVIEW, EventOperation.REMOVE, review.getReviewId());
     }
 
 
