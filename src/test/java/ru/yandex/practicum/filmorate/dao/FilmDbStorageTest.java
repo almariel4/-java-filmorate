@@ -13,7 +13,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.dao.FilmDbStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -186,36 +188,36 @@ public class FilmDbStorageTest {
     }
 
     @Test
-//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
     void getFilmsByTitle() {
         List<Film> films = filmDbStorage.searchBy("док", "title");
 
         Assertions.assertEquals(films.size(), 3);
-        Assertions.assertEquals(films.get(0).getId(), 3);
-        Assertions.assertEquals(films.get(1).getId(), 4);
-        Assertions.assertEquals(films.get(2).getId(), 5);
+        Assertions.assertEquals(films.get(0).getId(), 1);
+        Assertions.assertEquals(films.get(1).getId(), 2);
+        Assertions.assertEquals(films.get(2).getId(), 3);
     }
 
     @Test
-//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
     void getFilmsByDirector() {
         List<Film> films = filmDbStorage.searchBy("ква", "director");
 
         Assertions.assertEquals(films.size(), 2);
-        Assertions.assertEquals(films.get(0).getId(), 7);
-        Assertions.assertEquals(films.get(1).getId(), 6);
+        Assertions.assertEquals(films.get(0).getId(), 5);
+        Assertions.assertEquals(films.get(1).getId(), 4);
     }
 
     @Test
-//    @Sql(value = {"/testschema-common-films.sql", "/testdata-common-films.sql"})
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
     void getFilmsByTitleAndDirector() {
         List<Film> films = filmDbStorage.searchBy("к", "title,director");
 
         Assertions.assertEquals(films.size(), 5);
-        Assertions.assertEquals(films.get(0).getId(), 3);
-        Assertions.assertEquals(films.get(0).getId(), 4);
-        Assertions.assertEquals(films.get(0).getId(), 7);
-        Assertions.assertEquals(films.get(0).getId(), 6);
-        Assertions.assertEquals(films.get(1).getId(), 5);
+        Assertions.assertEquals(films.get(0).getId(), 1);
+        Assertions.assertEquals(films.get(1).getId(), 2);
+        Assertions.assertEquals(films.get(2).getId(), 5);
+        Assertions.assertEquals(films.get(3).getId(), 4);
+        Assertions.assertEquals(films.get(4).getId(), 3);
     }
 }

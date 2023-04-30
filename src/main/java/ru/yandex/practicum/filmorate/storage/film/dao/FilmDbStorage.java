@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -41,7 +40,6 @@ public class FilmDbStorage implements FilmStorage {
             return jdbcTemplate.queryForObject(getFilmSqlQuery, this::makeFilm, id);
         } catch (RuntimeException e) {
             throw new NotFoundException("Фильм не найден.");
-
         }
     }
 
@@ -94,15 +92,15 @@ public class FilmDbStorage implements FilmStorage {
                 "UPDATE films " +
                         "SET name=?, description=?, release_date=?, duration=?, rating_mpa_id=? " +
                         "WHERE film_id=?";
-
-        int rowsCount = jdbcTemplate.update(sqlQuery,
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId()
-        );
+        int rowsCount = 0;
+            rowsCount = jdbcTemplate.update(sqlQuery,
+                    film.getName(),
+                    film.getDescription(),
+                    film.getReleaseDate(),
+                    film.getDuration(),
+                    film.getMpa().getId(),
+                    film.getId()
+            );
 
         addMpa(film);
         updateGenres(film);
@@ -113,8 +111,9 @@ public class FilmDbStorage implements FilmStorage {
 
         if (rowsCount > 0) {
             return getFilmById(film.getId());
+        } else {
+            throw new NotFoundException("Фильм не найден.");
         }
-        throw new NotFoundException("Фильм не найден.");
     }
 
     @Override
@@ -248,13 +247,15 @@ public class FilmDbStorage implements FilmStorage {
 
         switch (by) {
             case "title": {
-                String sql = "SELECT films.*, COUNT(l.film_id) as count " +
+                String sql = "SELECT films.*, G.GENRE_ID, GT.name AS genre_name, COUNT(l.film_id) as count " +
                         "FROM films " +
-                                    "LEFT JOIN likes l ON films.film_id=l.film_id " +
-                        "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
+                        "LEFT JOIN GENRE G ON FILMS.FILM_ID = G.FILM_ID " +
+                        "LEFT JOIN GENRE_TYPE GT on G.GENRE_ID = GT.GENRE_ID " +
+                        "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                        "WHERE LOWER(films.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
-                jdbcTemplate.query(sql, this::makeFilm, query);
+               searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
                 break;
             }
             case "director": {
@@ -263,20 +264,20 @@ public class FilmDbStorage implements FilmStorage {
                                     "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
                                     "JOIN DIRECTORS d ON df.director_id=d.director_id " +
                                     "LEFT JOIN likes l ON films.film_id=l.film_id " +
-                        "WHERE LOWER(d.name) LIKE LOWER('%?%') " +
+                        "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
                 searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
                 break;
             }
-            case "tile,director": {
+            case "title,director": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
                                     "LEFT JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
                                     "LEFT JOIN DIRECTORS d ON df.director_id=d.director_id " +
                                     "LEFT JOIN likes l ON films.film_id=l.film_id " +
-                        "WHERE LOWER(films.name) LIKE LOWER('%?%') " +
-                            "OR LOWER(d.name) LIKE LOWER('%?%') " +
+                        "WHERE LOWER(films.name) LIKE LOWER(CONCAT('%',?,'%')) " +
+                            "OR LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "GROUP BY films.film_id " +
                         "ORDER BY count DESC";
                 searchResults = jdbcTemplate.query(sql, this::makeFilm, query, query);
@@ -288,7 +289,7 @@ public class FilmDbStorage implements FilmStorage {
 
     public Mpa getMpaById(int mpaId) {
         String sqlQuery =
-                "SELECT ratintg_mpa_id, name " +
+                "SELECT rating_mpa_id, name " +
                         "FROM mpa_type " +
                         "WHERE rating_mpa_id=?";
 
@@ -348,7 +349,7 @@ public class FilmDbStorage implements FilmStorage {
         Set<Genre> genreSet = new HashSet<>();
 
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(
-                "SELECT id, film_id, genre_id " +
+                "SELECT film_id, genre_id " +
                         "FROM genre " +
                         "ORDER BY genre_id ASC");
 
@@ -465,7 +466,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public Director getDirectorById(int id) {
-        String sql = "SELECT * " +
+        String sql = "SELECT DIRECTOR_ID, NAME " +
                 "FROM DIRECTORS " +
                 "WHERE DIRECTOR_ID = ?";
 
@@ -555,7 +556,8 @@ public class FilmDbStorage implements FilmStorage {
         Integer duration = rs.getInt("duration");
         LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         Mpa mpa = getMpaById(rs.getInt("rating_mpa_id"));
-        Set genres = makeGenres(rs, rowNum);
+//        Set genres = makeGenres(rs, rowNum);
+        Set genres = getGenre(id);
         Set likes = getLikes(id);
         Set directors = getFilmDirectors(id);
 
@@ -588,7 +590,7 @@ public class FilmDbStorage implements FilmStorage {
                 .build();
     }
 
-    private Set makeGenres(ResultSet rs, int rowNum) throws SQLException {
+/*    private Set makeGenres(ResultSet rs, int rowNum) throws SQLException {
         Set<Genre> genres = new TreeSet<>(Genre::compareTo);
 
         do {
@@ -604,7 +606,7 @@ public class FilmDbStorage implements FilmStorage {
         } while (rs.next());
 
         return genres;
-    }
+    }*/
 
     private Director makeDirector(ResultSet rs) throws SQLException {
         int id = rs.getInt("director_id");
