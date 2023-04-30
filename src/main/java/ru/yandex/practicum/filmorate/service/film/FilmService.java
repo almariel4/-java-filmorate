@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.LinkedHashSet;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -42,7 +41,7 @@ public class FilmService {
     }
 
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
-        return filmStorage.getPopularFIlms(count, genre, year);
+        return filmStorage.getPopularFilms(count, genre, year);
     }
 
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {

@@ -47,13 +47,13 @@ public class FilmDbStorageTest {
 
     @Test
     public void getPopularFilmsTest() {
-        List<Film> listFilms = filmDbStorage.getPopularFIlms(5, -1, -1);
+        List<Film> listFilms = filmDbStorage.getPopularFilms(5, -1, -1);
         Assertions.assertEquals(2, listFilms.size());
-        List<Film> listFilms1 = filmDbStorage.getPopularFIlms(5, 2, 1999);
+        List<Film> listFilms1 = filmDbStorage.getPopularFilms(5, 2, 1999);
         Assertions.assertEquals(1, listFilms1.size());
         Film film1 = listFilms1.get(0);
         Assertions.assertEquals("New film", film1.getName());
-        List<Film> listFilms2 = filmDbStorage.getPopularFIlms(5, -1, 1989);
+        List<Film> listFilms2 = filmDbStorage.getPopularFilms(5, -1, 1989);
         Film film2 = listFilms2.get(0);
         Assertions.assertEquals("Film Updated", film2.getName());
         Assertions.assertEquals(1, listFilms2.size());
@@ -189,7 +189,7 @@ public class FilmDbStorageTest {
 
     @Test
     @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
-    void getFilmsByTitle() {
+    void searchFilmsByTitle() {
         List<Film> films = filmDbStorage.searchBy("док", "title");
 
         Assertions.assertEquals(films.size(), 3);
@@ -200,7 +200,7 @@ public class FilmDbStorageTest {
 
     @Test
     @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
-    void getFilmsByDirector() {
+    void searchFilmsByDirector() {
         List<Film> films = filmDbStorage.searchBy("ква", "director");
 
         Assertions.assertEquals(films.size(), 2);
@@ -210,7 +210,7 @@ public class FilmDbStorageTest {
 
     @Test
     @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
-    void getFilmsByTitleAndDirector() {
+    void searchFilmsByTitleAndDirector() {
         List<Film> films = filmDbStorage.searchBy("к", "title,director");
 
         Assertions.assertEquals(films.size(), 5);

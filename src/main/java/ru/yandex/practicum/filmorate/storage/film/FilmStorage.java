@@ -18,7 +18,7 @@ public interface FilmStorage {
 
     Film deleteLike(Integer filmId, Integer userId);
 
-    List<Film> getPopularFIlms(int count, int genre, int year);
+    List<Film> getPopularFilms(int count, int genre, int year);
 
     LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
 
