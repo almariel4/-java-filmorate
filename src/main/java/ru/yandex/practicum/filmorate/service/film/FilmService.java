@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.feed.EventOperation;
+import ru.yandex.practicum.filmorate.model.feed.EventType;
+import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.LinkedHashSet;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final EventService eventService;
 
     public Film getFilmById(Integer filmId) {
         return filmStorage.getFilmById(filmId);
@@ -34,11 +37,15 @@ public class FilmService {
     }
 
     public Film like(Integer filmId, Integer userId) {
-        return filmStorage.like(filmId, userId);
+        Film film = filmStorage.like(filmId, userId);
+        eventService.createEvent(userId, EventType.LIKE, EventOperation.ADD, filmId);
+        return film;
     }
 
     public Film deleteLike(Integer filmId, Integer userId) {
-        return filmStorage.deleteLike(filmId, userId);
+        Film film = filmStorage.deleteLike(filmId, userId);
+        eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
+        return film;
     }
 
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
