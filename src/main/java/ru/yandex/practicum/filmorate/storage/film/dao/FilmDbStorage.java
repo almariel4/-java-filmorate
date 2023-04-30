@@ -29,13 +29,18 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(Integer id) {
+/*
         final String getFilmSqlQuery =
                 "SELECT FILMS.*, GT.NAME as genre_name, G.GENRE_ID " +
                         "FROM FILMS " +
                         "LEFT JOIN GENRE G ON FILMS.FILM_ID = G.FILM_ID " +
                         "LEFT JOIN GENRE_TYPE GT on G.GENRE_ID = GT.GENRE_ID " +
                         "WHERE FILMS.FILM_ID = ?";
-
+*/
+        final String getFilmSqlQuery =
+                "SELECT films.* " +
+                        "FROM films " +
+                        "WHERE films.film_id = ?";
         try {
             return jdbcTemplate.queryForObject(getFilmSqlQuery, this::makeFilm, id);
         } catch (RuntimeException e) {
@@ -147,7 +152,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getPopularFIlms(int count, int genre, int year) {
+    public List<Film> getPopularFilms(int count, int genre, int year) {
         String sqlQuery;
         String sqlQueryStart =
 
@@ -165,10 +170,10 @@ public class FilmDbStorage implements FilmStorage {
         if (year == -1 && genre == -1) {
             String popularFilmsSqlQuery =
                     "SELECT films.*, COUNT(l.film_id) as count " +
-                            "FROM films\n" +
-                            "LEFT JOIN likes l ON films.film_id=l.film_id\n" +
-                            "GROUP BY films.film_id\n" +
-                            "ORDER BY count DESC\n" +
+                            "FROM films " +
+                            "LEFT JOIN likes l ON films.film_id=l.film_id " +
+                            "GROUP BY films.film_id " +
+                            "ORDER BY count DESC " +
                             "LIMIT ?";
 
             return jdbcTemplate.query(popularFilmsSqlQuery, (resultSet, rowNum) -> Film.builder()
@@ -247,10 +252,10 @@ public class FilmDbStorage implements FilmStorage {
 
         switch (by) {
             case "title": {
-                String sql = "SELECT films.*, G.GENRE_ID, GT.name AS genre_name, COUNT(l.film_id) as count " +
+                String sql = "SELECT films.*, G.genre_id, GT.name AS genre_name, COUNT(l.film_id) as count " +
                         "FROM films " +
-                        "LEFT JOIN GENRE G ON FILMS.FILM_ID = G.FILM_ID " +
-                        "LEFT JOIN GENRE_TYPE GT on G.GENRE_ID = GT.GENRE_ID " +
+                        "LEFT JOIN genre g ON films.film_id = g.film_id " +
+                        "LEFT JOIN genre_type gt on g.genre_id = gt.genre_id " +
                         "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(films.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "GROUP BY films.film_id " +
@@ -261,8 +266,8 @@ public class FilmDbStorage implements FilmStorage {
             case "director": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
-                                    "JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
-                                    "JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "JOIN director_films  df ON films.film_id=df.film_id " +
+                                    "JOIN directors  d ON df.director_id=d.director_id " +
                                     "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "GROUP BY films.film_id " +
@@ -273,8 +278,8 @@ public class FilmDbStorage implements FilmStorage {
             case "title,director": {
                 String sql = "SELECT films.*, COUNT(l.film_id) as count " +
                         "FROM films " +
-                                    "LEFT JOIN DIRECTOR_FILMS df ON films.film_id=df.film_id " +
-                                    "LEFT JOIN DIRECTORS d ON df.director_id=d.director_id " +
+                                    "LEFT JOIN director_films  df ON films.film_id=df.film_id " +
+                                    "LEFT JOIN directors  d ON df.director_id=d.director_id " +
                                     "LEFT JOIN likes l ON films.film_id=l.film_id " +
                         "WHERE LOWER(films.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                             "OR LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " +
