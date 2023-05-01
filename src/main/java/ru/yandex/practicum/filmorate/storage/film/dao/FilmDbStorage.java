@@ -453,8 +453,8 @@ public class FilmDbStorage implements FilmStorage {
                         d.getId());
             });
         } catch (DataIntegrityViolationException e) {
-            log.error("Один из режисёров не найден: {}", film.getDirectors());
-            throw new NotFoundException("Один из режисёров не найден: " + film.getDirectors());
+            log.error("Один из режисcёров не найден: {}", film.getDirectors());
+            throw new NotFoundException("Один из режиcсёров не найден: " + film.getDirectors());
         }
     }
 
@@ -522,6 +522,40 @@ public class FilmDbStorage implements FilmStorage {
                 .genres(getGenre(resultSet.getInt("film_id")))
                 .likes(getLikes(resultSet.getInt("film_id")))
                 .build(), userId, friendId);
+    }
+
+    @Override
+    public List<Film> getRecommendedFilms(int userId) {
+        String sql = "SELECT films.*, m.* " +
+                "FROM films " +
+                "JOIN mpa_type AS m ON m.rating_mpa_id = films.rating_mpa_id " +
+                "WHERE films.film_id IN (SELECT DISTINCT film_id " +
+                                        "FROM likes " +
+                                        "WHERE user_id IN (SELECT user_id " +
+                                                          "FROM (SELECT user_id, COUNT(*) matches " +
+                                                                "FROM likes " +
+                                                                "WHERE NOT user_id = ? " +
+                                                                "AND film_id IN (SELECT film_id " +
+                                                                          "FROM likes " +
+                                                                          "WHERE user_id = ?) " +
+                                                                "GROUP BY user_id " +
+                                                                "ORDER BY count(*) DESC ) " +
+                                                          "GROUP BY user_id " +
+                                                          "HAVING matches = MAX(matches)) " +
+                                        "AND film_id NOT IN (SELECT film_id " +
+                                                            "FROM likes " +
+                                                            "WHERE user_id = ?))";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(Objects.requireNonNull(resultSet.getDate("release_date")).toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(getMpaById(resultSet.getInt("rating_mpa_id")))
+                .genres(getGenre(resultSet.getInt("film_id")))
+                .likes(getLikes(resultSet.getInt("film_id")))
+                .build(), userId, userId, userId);
     }
 
     private Map<String, Object> toMap(Film film) {
