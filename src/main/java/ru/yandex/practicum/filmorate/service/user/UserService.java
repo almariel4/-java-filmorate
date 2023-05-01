@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.service.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.feed.Event;
 import ru.yandex.practicum.filmorate.model.feed.EventOperation;
 import ru.yandex.practicum.filmorate.model.feed.EventType;
 import ru.yandex.practicum.filmorate.service.event.EventService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class UserService {
 
     private final UserStorage userStorage;
     private final EventService eventService;
+    private final FilmStorage filmStorage;
 
     public User getUserById(Integer userId) {
         return userStorage.getUserById(userId);
@@ -59,5 +62,10 @@ public class UserService {
     public List<Event> getFeed(Integer userId) {
         getUserById(userId);
         return eventService.getFeed(userId);
+    }
+
+    public List<Film> getFilmRecommendations(Integer id) {
+        getUserById(id);
+        return filmStorage.getRecommendedFilms(id);
     }
 }
