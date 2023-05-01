@@ -184,4 +184,27 @@ public class FilmDbStorageTest {
         List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
         assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 1);
     }
+
+    @Test
+    @Sql(value = {"/test-schema-common-films.sql", "/test-data-recommended-films.sql"})
+    void getRecommendedFilmsTest() {
+        List<Film> recommendedFilms = filmDbStorage.getRecommendedFilms(1);
+        Assertions.assertEquals(1, recommendedFilms.size());
+        Assertions.assertEquals(filmDbStorage.getFilmById(2).getId(), recommendedFilms.get(0).getId());
+
+        recommendedFilms = filmDbStorage.getRecommendedFilms(2);
+        Assertions.assertEquals(1, recommendedFilms.size());
+        Assertions.assertEquals(filmDbStorage.getFilmById(1).getId(), recommendedFilms.get(0).getId());
+    }
+
+    @Test
+    @Sql(value = {"/test-schema-common-films.sql", "/test-data-recommended-films.sql"})
+    void getRecommendedFilmsAddNewLikeTest() {
+        filmDbStorage.like(3, 3);
+        List<Film> recommendedFilms = filmDbStorage.getRecommendedFilms(3);
+
+        Assertions.assertEquals(2, recommendedFilms.size());
+        Assertions.assertEquals(filmDbStorage.getFilmById(1).getId(), recommendedFilms.get(0).getId());
+        Assertions.assertEquals(filmDbStorage.getFilmById(2).getId(), recommendedFilms.get(1).getId());
+    }
 }
