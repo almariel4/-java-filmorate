@@ -48,7 +48,7 @@ public class FilmService {
     }
 
     public List<Film> getBestFilmsOfGenreAndYear(int count, int genre, int year) {
-        return filmStorage.getPopularFIlms(count, genre, year);
+        return filmStorage.getPopularFilms(count, genre, year);
     }
 
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
@@ -57,5 +57,9 @@ public class FilmService {
 
     public List<Film> getCommonFilms(int userId, int friendId) {
         return filmStorage.getCommonFilms(userId, friendId);
+    }
+
+    public List<Film> getSearchResults(String query, String by) {
+       return filmStorage.searchBy(query, by);
     }
 }

@@ -13,7 +13,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.dao.FilmDbStorage;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,13 +47,13 @@ public class FilmDbStorageTest {
 
     @Test
     public void getPopularFilmsTest() {
-        List<Film> listFilms = filmDbStorage.getPopularFIlms(5, -1, -1);
+        List<Film> listFilms = filmDbStorage.getPopularFilms(5, -1, -1);
         Assertions.assertEquals(2, listFilms.size());
-        List<Film> listFilms1 = filmDbStorage.getPopularFIlms(5, 2, 1999);
+        List<Film> listFilms1 = filmDbStorage.getPopularFilms(5, 2, 1999);
         Assertions.assertEquals(1, listFilms1.size());
         Film film1 = listFilms1.get(0);
         Assertions.assertEquals("New film", film1.getName());
-        List<Film> listFilms2 = filmDbStorage.getPopularFIlms(5, -1, 1989);
+        List<Film> listFilms2 = filmDbStorage.getPopularFilms(5, -1, 1989);
         Film film2 = listFilms2.get(0);
         Assertions.assertEquals("Film Updated", film2.getName());
         Assertions.assertEquals(1, listFilms2.size());
@@ -183,6 +185,40 @@ public class FilmDbStorageTest {
         filmDbStorage.deleteLike(2, 4);
         List<Film> common1 = filmDbStorage.getCommonFilms(1,2);
         assertThat(common1.get(0)).hasFieldOrPropertyWithValue("id", 1);
+    }
+
+    @Test
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
+    void searchFilmsByTitle() {
+        List<Film> films = filmDbStorage.searchBy("док", "title");
+
+        Assertions.assertEquals(films.size(), 3);
+        Assertions.assertEquals(films.get(0).getId(), 1);
+        Assertions.assertEquals(films.get(1).getId(), 2);
+        Assertions.assertEquals(films.get(2).getId(), 3);
+    }
+
+    @Test
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
+    void searchFilmsByDirector() {
+        List<Film> films = filmDbStorage.searchBy("ква", "director");
+
+        Assertions.assertEquals(films.size(), 2);
+        Assertions.assertEquals(films.get(0).getId(), 5);
+        Assertions.assertEquals(films.get(1).getId(), 4);
+    }
+
+    @Test
+    @Sql(value = {"/schematest.sql", "/testdata-add-search.sql"})
+    void searchFilmsByTitleAndDirector() {
+        List<Film> films = filmDbStorage.searchBy("к", "title,director");
+
+        Assertions.assertEquals(films.size(), 5);
+        Assertions.assertEquals(films.get(0).getId(), 1);
+        Assertions.assertEquals(films.get(1).getId(), 2);
+        Assertions.assertEquals(films.get(2).getId(), 5);
+        Assertions.assertEquals(films.get(3).getId(), 4);
+        Assertions.assertEquals(films.get(4).getId(), 3);
     }
 
     @Test
