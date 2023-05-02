@@ -53,6 +53,12 @@ public class FilmController {
         return filmService.deleteLike(filmId, userId);
     }
 
+    @DeleteMapping("/{id}")
+    public Film delete(@PathVariable Integer id) {
+        log.info("Поступил запрос на удаление фильма с id: " + id);
+        return filmService.deleteFilm(id);
+    }
+
     @GetMapping("/popular")
     public List<Film> getBestFilmsOfGenreAndYear(
             @RequestParam(defaultValue = "10") int count,

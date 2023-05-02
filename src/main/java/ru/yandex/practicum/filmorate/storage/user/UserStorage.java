@@ -21,4 +21,6 @@ public interface UserStorage {
 
     List<User> getCommonsFriends(Integer id, Integer otherId);
 
+    User deleteUser(Integer id);
+
 }
