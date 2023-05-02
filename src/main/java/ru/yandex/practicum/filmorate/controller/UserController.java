@@ -68,6 +68,12 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
+    @DeleteMapping("/{id}")
+    public User deleteUser(@PathVariable int id) {
+        log.info("Поступил запрос на удаление пользователя.");
+       return userService.deleteUser(id);
+    }
+
     @GetMapping("/{id}/feed")
     public List<Event> getFeed(@PathVariable int id) {
         return userService.getFeed(id);

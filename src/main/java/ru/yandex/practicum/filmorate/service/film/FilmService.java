@@ -60,6 +60,10 @@ public class FilmService {
     }
 
     public List<Film> getSearchResults(String query, String by) {
-       return filmStorage.searchBy(query, by);
+        return filmStorage.searchBy(query, by);
+    }
+
+    public Film deleteFilm(int id) {
+        return filmStorage.deleteFilm(id);
     }
 }

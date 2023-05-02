@@ -27,4 +27,7 @@ public interface FilmStorage {
     List<Film> searchBy(String query, String by);
 
     List<Film> getRecommendedFilms(int userId);
+
+    Film deleteFilm(int id);
+
 }
