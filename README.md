@@ -1,6 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Диаграмма таблицы проекта](https://github.com/Vkurse/-java-filmorate/blob/main/ER%20диаграмма.png)
+![Диаграмма таблицы проекта](https://github.com/Vkurse/-java-filmorate/blob/develop/ER%20диаграмма.png)
 ##### _Получение всех пользователей из таблицы:_
 SELECT * <br/>
 FROM user;
