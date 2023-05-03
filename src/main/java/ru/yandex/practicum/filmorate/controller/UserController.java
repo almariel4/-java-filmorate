@@ -17,8 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     private final UserService userService;
-    private final EventService eventService;
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable Integer userId) {
@@ -71,7 +71,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public User deleteUser(@PathVariable Integer id) {
         log.info("Поступил запрос на удаление пользователя c id " + id);
-       return userService.deleteUser(id);
+        return userService.deleteUser(id);
     }
 
     @GetMapping("/{id}/feed")

@@ -25,6 +25,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class DirectorDbStorage implements DirectorStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -91,6 +92,7 @@ public class DirectorDbStorage implements DirectorStorage {
                 "DELETE " +
                         "FROM DIRECTORS " +
                         "WHERE DIRECTOR_ID = ?";
+
         Director director = getDirectorById(id);
         jdbcTemplate.update(sql, id);
         log.info("Режиссёр {} удален", director);
@@ -101,13 +103,13 @@ public class DirectorDbStorage implements DirectorStorage {
         if (Objects.isNull(film.getDirectors())) {
             return;
         }
-
         try {
             film.getDirectors().forEach(d -> {
                 String sqlQuery =
                         "INSERT " +
                                 "INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) " +
                                 "VALUES (?, ?)";
+
                 jdbcTemplate.update(sqlQuery,
                         film.getId(),
                         d.getId());
@@ -125,8 +127,8 @@ public class DirectorDbStorage implements DirectorStorage {
                         "FROM DIRECTOR_FILMS AS df " +
                         "LEFT JOIN DIRECTORS AS d ON df.DIRECTOR_ID = d.DIRECTOR_ID " +
                         "WHERE df.film_id = ?";
-        Collection<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> makeDirector(rs), film.getId());
 
+        Collection<Director> directors = jdbcTemplate.query(sql, (rs, rowNum) -> makeDirector(rs), film.getId());
         return new LinkedHashSet<>(directors);
     }
 
@@ -144,6 +146,7 @@ public class DirectorDbStorage implements DirectorStorage {
                 "DELETE " +
                         "FROM DIRECTOR_FILMS " +
                         "WHERE FILM_ID = ?";
+
         jdbcTemplate.update(sql, film.getId());
         addDirectorForCurrentFilm(film);
     }

@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/genres")
 @RequiredArgsConstructor
 public class GenreController {
+
     private final GenreService genreService;
 
     @GetMapping

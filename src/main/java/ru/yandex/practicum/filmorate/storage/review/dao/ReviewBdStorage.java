@@ -150,5 +150,4 @@ public class ReviewBdStorage implements ReviewStorage {
         } else log.info("Пользователь с идентификатором {} не найден.", id);
         throw new NotFoundException("Пользователь не найден.");
     }
-
 }

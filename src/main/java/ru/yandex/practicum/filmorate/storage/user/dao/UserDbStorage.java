@@ -19,6 +19,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class UserDbStorage implements UserStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -66,7 +67,6 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         validationUser(user);
-
         String sqlQuery = "UPDATE users " +
                 "SET email=?, login=?, name=?, birthday=? " +
                 "WHERE user_id=?";
@@ -89,14 +89,12 @@ public class UserDbStorage implements UserStorage {
         } catch (RuntimeException e) {
             throw new NotFoundException("Пользователь не найден.");
         }
-
         String sqlQuery =
                 "INSERT " +
                         "INTO friends (user_id, friend_id) " +
                         "VALUES(?, ?)";
 
         jdbcTemplate.update(sqlQuery, userId, friendId);
-
         return getUserById(userId);
     }
 
@@ -165,8 +163,6 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        //        user.setFriends(getFriendsByUserId(user.getId()).stream().map(User::getId).collect(Collectors.toSet()));
-
         return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .email(resultSet.getString("email"))

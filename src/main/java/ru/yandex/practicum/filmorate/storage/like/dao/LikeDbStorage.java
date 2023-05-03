@@ -12,6 +12,7 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class LikeDbStorage implements LikeStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public Set<Integer> getLikesForCurrentFilm(int id) {

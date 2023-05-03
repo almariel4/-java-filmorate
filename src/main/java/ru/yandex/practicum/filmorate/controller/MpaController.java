@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/mpa")
 @RequiredArgsConstructor
 public class MpaController {
+
     private final MpaService mpaService;
 
     @GetMapping

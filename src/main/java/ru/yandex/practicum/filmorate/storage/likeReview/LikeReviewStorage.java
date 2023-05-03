@@ -9,5 +9,4 @@ public interface LikeReviewStorage {
     void deleteLike(int id, int userId);
 
     void deleteDislike(int id, int userId);
-
 }

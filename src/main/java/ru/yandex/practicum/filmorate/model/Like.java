@@ -11,15 +11,13 @@ import javax.validation.constraints.Positive;
 @Builder
 @AllArgsConstructor
 public class Like {
+
     @NotNull
     private Integer id;
-
     @NotNull
     @Positive
     private Integer userId;
-
     @NotNull
     @Positive
     private Integer filmId;
-
 }

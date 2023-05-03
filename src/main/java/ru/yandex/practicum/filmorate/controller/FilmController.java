@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(value = "/films", produces = "application/json")
 public class FilmController {
+
     private final FilmService filmService;
 
     @GetMapping("/{id}")

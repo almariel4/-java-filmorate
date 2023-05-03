@@ -20,6 +20,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class MpaDbStorage implements MpaStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public Mpa getMpaById(int mpaId) {
@@ -37,7 +38,6 @@ public class MpaDbStorage implements MpaStorage {
 
     public List<Mpa> findAll() {
         List<Mpa> mpaList = new ArrayList<>();
-
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(
                 "SELECT rating_mpa_id, name " +
                         "FROM mpa_type");
