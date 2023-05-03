@@ -1,15 +1,17 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Genre {
+@Validated
+@Builder(toBuilder = true)
+@EqualsAndHashCode(exclude = "name")
+public class Genre implements Comparable<Genre>{
     @NotNull
     private Integer id;
 

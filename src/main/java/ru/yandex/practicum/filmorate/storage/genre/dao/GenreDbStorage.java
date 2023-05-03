@@ -49,7 +49,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     public Set<Genre> getGenreForCurrentFilm(int id) {
-        Set<Genre> genreSet = new LinkedHashSet<>();
+        Set<Genre> genreSet = new TreeSet<>();
 
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(
                 "SELECT id, film_id, genre_id " +
