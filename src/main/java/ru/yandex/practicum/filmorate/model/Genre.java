@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -11,6 +8,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Genre {
     @NotNull
     private Integer id;
@@ -19,6 +17,6 @@ public class Genre {
     private String name;
 
     public int compareTo(Genre genre) {
-        return (genre.getId().compareTo(this.getId())) * -1;
+        return (genre.getId().compareTo(this.getId()));
     }
 }

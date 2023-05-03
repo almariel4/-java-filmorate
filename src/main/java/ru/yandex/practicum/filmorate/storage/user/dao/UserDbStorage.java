@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -85,8 +84,6 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User addFriend(Integer userId, Integer friendId) {
-        User user = getUserById(userId);
-
         try {
             getUserById(friendId);
         } catch (RuntimeException e) {
@@ -100,7 +97,7 @@ public class UserDbStorage implements UserStorage {
 
         jdbcTemplate.update(sqlQuery, userId, friendId);
 
-        return user;
+        return getUserById(userId);
     }
 
     @Override
@@ -146,6 +143,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getFriendsByUserId(Integer id) {
+        getUserById(id);
         String sqlQuery =
                 "SELECT user_id, email, login, name, birthday " +
                         "FROM users " +
@@ -167,16 +165,15 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = User.builder()
+        //        user.setFriends(getFriendsByUserId(user.getId()).stream().map(User::getId).collect(Collectors.toSet()));
+
+        return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .email(resultSet.getString("email"))
                 .login(resultSet.getString("login"))
                 .name(resultSet.getString("name"))
                 .birthday(resultSet.getDate("birthday").toLocalDate())
                 .build();
-        user.setFriends(getFriendsByUserId(user.getId()).stream().map(User::getId).collect(Collectors.toSet()));
-
-        return user;
     }
 
     private void validationUser(User user) throws ValidationException {

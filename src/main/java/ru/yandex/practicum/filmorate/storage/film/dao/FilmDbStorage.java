@@ -110,7 +110,7 @@ public class FilmDbStorage implements FilmStorage {
                 "UPDATE films " +
                         "SET name=?, description=?, release_date=?, duration=?, rating_mpa_id=? " +
                         "WHERE film_id=?";
-        int rowsCount = 0;
+        int rowsCount;
             rowsCount = jdbcTemplate.update(sqlQuery,
                     film.getName(),
                     film.getDescription(),
@@ -609,9 +609,9 @@ public class FilmDbStorage implements FilmStorage {
         LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         Mpa mpa = getMpaById(rs.getInt("rating_mpa_id"));
 //        Set genres = makeGenres(rs, rowNum);
-        Set genres = getGenre(id);
-        Set likes = getLikes(id);
-        Set directors = getFilmDirectors(id);
+        Set<Genre> genres = getGenre(id);
+        Set<Integer> likes = getLikes(id);
+        Set<Director> directors = getFilmDirectors(id);
 
         log.info("DAO: Метод создания объекта фильма из бд с id {}", id);
 
