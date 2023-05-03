@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder(toBuilder = true)
 public class Event {
+
     int eventId;
     long timestamp;
     int userId;

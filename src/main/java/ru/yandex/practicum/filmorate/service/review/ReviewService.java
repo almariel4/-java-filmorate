@@ -15,10 +15,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+
     private final ReviewStorage reviewStorage;
     private final LikeReviewStorage likeReviewStorage;
     private final EventService eventService;
-
 
     public Review create(Review review) {
         Review reviewCreated = reviewStorage.create(review);
@@ -32,13 +32,11 @@ public class ReviewService {
         return reviewUpdated;
     }
 
-
     public void delete(Integer id) {
         Review review = findById(id);
         reviewStorage.delete(id);
         eventService.createEvent(review.getUserId(), EventType.REVIEW, EventOperation.REMOVE, review.getReviewId());
     }
-
 
     public Review findById(Integer id) {
         return reviewStorage.findById(id).orElseThrow(() -> new NotFoundException("Отзыв не найден."));
@@ -63,6 +61,4 @@ public class ReviewService {
     public void deleteDislike(Integer id, Integer userId) {
         likeReviewStorage.deleteDislike(id, userId);
     }
-
-
 }

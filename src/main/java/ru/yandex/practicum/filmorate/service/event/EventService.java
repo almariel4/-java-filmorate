@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.service.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.feed.Event;
-import ru.yandex.practicum.filmorate.model.feed.EventType;
 import ru.yandex.practicum.filmorate.model.feed.EventOperation;
+import ru.yandex.practicum.filmorate.model.feed.EventType;
 import ru.yandex.practicum.filmorate.storage.event.EventStorage;
 
 import java.time.Instant;

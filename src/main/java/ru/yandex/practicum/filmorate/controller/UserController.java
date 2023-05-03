@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.feed.Event;
-import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
@@ -17,8 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     private final UserService userService;
-    private final EventService eventService;
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable Integer userId) {
@@ -71,7 +70,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public User deleteUser(@PathVariable Integer id) {
         log.info("Поступил запрос на удаление пользователя c id " + id);
-       return userService.deleteUser(id);
+        return userService.deleteUser(id);
     }
 
     @GetMapping("/{id}/feed")

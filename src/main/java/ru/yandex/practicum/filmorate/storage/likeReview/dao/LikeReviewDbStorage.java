@@ -50,6 +50,4 @@ public class LikeReviewDbStorage implements LikeReviewStorage {
 
         jdbcTemplate.update(sqlQuery, id, userId);
     }
-
-
 }

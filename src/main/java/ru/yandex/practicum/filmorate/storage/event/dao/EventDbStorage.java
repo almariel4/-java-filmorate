@@ -25,6 +25,7 @@ public class EventDbStorage implements EventStorage {
         final String sql = "SELECT event_id, timestamp, user_id, event_type, operation, entity_id " +
                 "FROM feed " +
                 "WHERE user_id = ? ";
+
         return jdbcTemplate.query(sql, this::mapRow, userId);
     }
 

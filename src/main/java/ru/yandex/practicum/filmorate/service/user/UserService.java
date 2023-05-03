@@ -69,7 +69,7 @@ public class UserService {
         return filmStorage.getRecommendedFilms(id);
     }
 
-    public User deleteUser(Integer id){
-       return userStorage.deleteUser(id);
+    public User deleteUser(Integer id) {
+        return userStorage.deleteUser(id);
     }
 }

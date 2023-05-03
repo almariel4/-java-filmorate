@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface FilmStorage {
+
     Film getFilmById(Integer id);
 
     List<Film> findAllFilms();
@@ -29,5 +30,4 @@ public interface FilmStorage {
     List<Film> getRecommendedFilms(int userId);
 
     Film deleteFilm(Integer id);
-
 }

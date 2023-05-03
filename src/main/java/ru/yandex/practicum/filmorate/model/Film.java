@@ -19,24 +19,17 @@ public class Film {
 
     @NotBlank
     private String name;
-
     @NotBlank
     @Size(max = 200)
     private String description;
-
     @NotNull
     @ReleaseDate(message = "Некорректна указана дата релиза.")
     private LocalDate releaseDate;
-
     @Positive
     private int duration;
-
     private Set<Integer> likes;
-
     @NotNull
     private Mpa mpa;
-
     private Set<Genre> genres;
-
     private Set<Director> directors;
 }

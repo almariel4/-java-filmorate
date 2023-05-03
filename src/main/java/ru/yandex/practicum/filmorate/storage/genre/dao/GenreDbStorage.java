@@ -16,6 +16,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class GenreDbStorage implements GenreStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public Genre getGenreForId(int id) {
@@ -68,7 +69,6 @@ public class GenreDbStorage implements GenreStorage {
         if (Objects.isNull(film.getGenres())) {
             return;
         }
-
         film.getGenres().forEach(g -> {
             String sqlQuery =
                     "INSERT " +

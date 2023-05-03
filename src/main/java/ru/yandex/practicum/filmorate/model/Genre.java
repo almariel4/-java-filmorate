@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @Validated
 @Builder(toBuilder = true)
 @EqualsAndHashCode(exclude = "name")
-public class Genre implements Comparable<Genre>{
+public class Genre implements Comparable<Genre> {
+
     @NotNull
     private Integer id;
-
     @NotNull
     private String name;
 
