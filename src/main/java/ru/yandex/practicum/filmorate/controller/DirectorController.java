@@ -20,39 +20,31 @@ public class DirectorController {
     @PostMapping
     public Director addDirector(@Valid @RequestBody Director director) {
         log.info("Пришел /POST запрос на добавление режиссёра: {}", director);
-        Director director1 = directorService.addDirector(director);
-        log.info("Ответ отправлен: {}", director1);
-        return director1;
+        return directorService.addDirector(director);
     }
 
     @GetMapping
     public List<Director> getDirectors() {
         log.info("Пришел /GET запрос на получение всех режиссёров");
-        List<Director> directors = directorService.getDirectors();
-        log.info("Ответ отправлен: {}", directors);
-        return directors;
+        return directorService.getDirectors();
     }
 
     @GetMapping("/{id}")
     public Director getDirectorById(@PathVariable int id) {
         log.info("Получен /GET запрос на получение режиссёра с id = {}", id);
-        Director director = directorService.getDirectorById(id);
-        log.info("Ответ отправлен: {}", director);
-        return director;
+        return directorService.getDirectorById(id);
     }
 
     @PutMapping
     public Director updateDirector(@RequestBody Director director) {
         log.info("Получен /PUT запрос на изменение данных режиссёра с id = {}", director.getId());
         directorService.updateDirector(director);
-        Director director1 = directorService.getDirectorById(director.getId());
-        log.info("Ответ отправлен: {}", director1);
-        return director1;
+        return directorService.getDirectorById(director.getId());
     }
 
     @DeleteMapping("/{id}")
     public void deleteDirectorById(@PathVariable int id) {
-        log.info("Получен /DELETE запрос на на удаление режиссёра с id = {}", id);
+        log.info("Получен /DELETE запрос на удаление режиссёра с id = {}", id);
         directorService.deleteDirectorById(id);
     }
 }
