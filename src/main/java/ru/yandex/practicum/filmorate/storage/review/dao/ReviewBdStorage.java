@@ -136,7 +136,7 @@ public class ReviewBdStorage implements ReviewStorage {
             return true;
         } else log.info("Фильм с идентификатором {} не найден.", id);
         if (id == 0) {
-            throw new ValidationException("Фильм не найден.");
+            throw new ValidationException("У фильма не может быть id = 0.");
         } else
             throw new NotFoundException("Фильм не найден.");
     }
