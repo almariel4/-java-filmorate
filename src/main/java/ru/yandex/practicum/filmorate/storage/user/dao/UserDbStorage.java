@@ -30,7 +30,7 @@ public class UserDbStorage implements UserStorage {
                         "WHERE user_id=?";
 
         try {
-            return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToUser, id);
+            return jdbcTemplate.queryForObject(sqlQuery, this::getMapRowToUser, id);
         } catch (RuntimeException e) {
             throw new NotFoundException("Пользователь не найден.");
         }
@@ -136,7 +136,7 @@ public class UserDbStorage implements UserStorage {
                         "FROM friends " +
                         "WHERE user_id = ?)";
 
-        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id, otherId));
+        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::getMapRowToUser, id, otherId));
     }
 
     @Override
@@ -150,7 +150,7 @@ public class UserDbStorage implements UserStorage {
                         "FROM friends " +
                         "WHERE user_id=?)";
 
-        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
+        return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::getMapRowToUser, id));
     }
 
     private Map<String, Object> toMap(User user) {
@@ -162,7 +162,7 @@ public class UserDbStorage implements UserStorage {
         return values;
     }
 
-    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
+    private User getMapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .email(resultSet.getString("email"))
